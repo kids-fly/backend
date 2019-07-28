@@ -1,6 +1,6 @@
-const express = require('express')
-const router = express.Router()
-const Admin = require('./adminController')
+const express = require("express");
+const router = express.Router();
+const Admin = require("./adminController");
 
 // router.post('/', Admin.addAdmin)
 // router.delete('/',Admin.removeAdmin)
@@ -15,4 +15,4 @@ const Admin = require('./adminController')
 // router.get('/airports/:id', Admin.getAirport)
 // router.get('/users', Admin.getAllAssignedUsers)
 
-module.exports = router
+module.exports = router;
