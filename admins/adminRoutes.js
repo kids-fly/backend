@@ -1,0 +1,12 @@
+const express = require('express')
+const router = express.Router()
+const Admin = require('./adminController')
+
+router.post('/admin/flights', Admin.addFlight)
+router.delete('/admin/flights',Admin.removeFlight)
+router.get('/admin/flights', Admin.getFlight)
+router.get('/admin/flights/:id', Admin.getFlight)
+router.post('/admin/airports',Admin.addAirport)
+router.delete('/admin/airports', Admin.removeAirport)
+router.get('/admin/airports/:id', Admin.getAirport)
+router.get('/admin/users', Admin.getAllAssignedUsers)
