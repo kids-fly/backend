@@ -3,9 +3,11 @@ const router = express.Router()
 
 const Auth = require('./authController')
 
-router.post('/auth/register',Auth.register)
-router.post('/auth/login', Auth.login)
-/*
-router.post('/auth/reset', Auth.reset)
-router.post('/auth/forgot, Auth.forgot)
-router.get('/auth/logout, Auth.logout) */
+// router.post('/register',Auth.register)
+// router.post('/login', Auth.login)
+// /*
+// router.post('/reset', Auth.reset)
+// router.post('/forgot, Auth.forgot)
+// router.get('/logout, Auth.logout) */
+
+module.exports= router
