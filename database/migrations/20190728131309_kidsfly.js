@@ -37,7 +37,8 @@ exports.up = function(knex) {
             .inTable('airports')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
-        table.text('admin_location').notNullable()
+        table.text('admin_location').notNullable();
+      
     })
     .createTable('flights', table => {
         // chheck time format in knex
@@ -78,15 +79,21 @@ exports.up = function(knex) {
             .inTable('flights')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
-        table.integer('admin_id')
+        table.integer('departure_admin_id')
             .unsigned()
-            .notNullable()
+            .references('id'
+            ).inTable('admins')
+            .onUpdate('CASCADE')
+            .onDelete('CASCADE');
+            table.integer('arrival_admin_id')
+            .unsigned()
             .references('id'
             ).inTable('admins')
             .onUpdate('CASCADE')
             .onDelete('CASCADE');
         table.integer('no_of_kids')
             .unsigned();
+        table.boolean('isArriving')
         table.boolean('isArrived')
     })
     .createTable('arrivals', table => {
@@ -95,7 +102,9 @@ exports.up = function(knex) {
             .unsigned()
             .notNullable()
             .references('id')
-            .inTable('trips');
+            .inTable('trips')
+            .onUpdate('CASCADE')
+            .onDelete('CASCADE');;
         table.text('user_location')
     
     })

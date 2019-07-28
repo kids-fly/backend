@@ -1,14 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const Admin = require('./adminController')
+const Trips = require('./tripController')
 
-// router.post('/flights', Admin.addFlight)
-// router.delete('/flights',Admin.removeFlight)
-// router.get('/flights', Admin.getFlight)
-// router.get('/flights/:id', Admin.getFlight)
-// router.post('/airports',Admin.addAirport)
-// router.delete('/airports', Admin.removeAirport)
-// router.get('/airports/:id', Admin.getAirport)
-// router.get('/users', Admin.getAllAssignedUsers)
+// router.get('/', Trips.getTrips)
+// router.post('/', Trips.scheduleTrip)
+// router.put('/:id', Trips.editTrip)
+// router.get('/:id', Trips.getTrip)
+// router.delete('/:id', Trips.deleteTrip)
+// router.patch(':/id', Trips.addAdminToTrip) randomly search two admin based on your flights admin
+
 
 module.exports = router

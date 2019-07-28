@@ -1,6 +1,6 @@
 const db= require('../database/dbConfig')
 
-const insertUser = async(data) => {
+const postUser = async(data) => {
     return await db('users').insert(data)
 }
 
