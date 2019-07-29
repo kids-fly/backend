@@ -1,8 +1,8 @@
 const db = require("../database/dbConfig");
 
-const post = async (name, data) => {
+const post = async (name, data, action) => {
   const [id] = await db(name).insert(data);
-  return getFlights(id);
+  return action(id);
 };
 const get = async (name, id) => {
   if (id) {
@@ -27,10 +27,10 @@ const flightInfo = data => {
     arrival_location
   };
 };
-const postAdminDetials = data => post("admins", data);
+const postAdminDetials = data => post("admins", data, getAdminsDetials);
 const getAdminsDetials = id => get("admins", id);
 const deleteAdminDetails = id => deleted("admins", id);
-const postFlight = data => post("flights", data);
+const postFlight = data => post("flights", data ,getFlights);
 const deleteFlight = id => deleted("flights", id);
 const postAirport = data => post("airports", data);
 const getAirports = id => get("airports", id);

@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Admin = require("./adminController");
-
-// router.post('/', Admin.addAdmin)
-// router.delete('/',Admin.removeAdmin)
+router.patch('/adminstatus/:id', Admin.makeRemoveAdmin)
+router.post('/:userId', Admin.addAdminDetails)
+// router.delete('/',Admin.removeAdminDetails)
 // router.get('/:id', Admin.getAdmin)
 // router.get('/',Admin.getAdmins)
 // router.post('/flights', Admin.addFlight)

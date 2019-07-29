@@ -18,7 +18,6 @@ const getUsers = async id => {
   return data.map(user => userInfo(user));
 };
 const updateUser = async (id, data) => {
-    console.log(id ,data)
   const userid = await db("users")
     .where("id", id)
     .update(data);
