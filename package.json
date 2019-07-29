@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "db:migrate": "NODE_ENV=production npx knex migrate:latest",
+    "migrate": "NODE_ENV=production npx knex migrate:latest",
     "test": "cross-env DB_ENV=testing jest --watch --verbose",
-    "start": "db:migrate && node index.js"
+    "start": "migrate&& node index.js"
   },
   "jest": {
     "testEnvironment": "node"
