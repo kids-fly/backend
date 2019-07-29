@@ -4,15 +4,6 @@ const post = async (name, data, action) => {
   const [id] = await db(name).insert(data);
   return action(id);
 };
-const get = async (name, id) => {
-  if (id) {
-    const data = await db(name)
-      .where("id", id)
-      .first();
-    return data;
-  }
-  return await db(name);
-};
 const deleted = async (name, id) => {
   return await db(name)
     .where("id", id)
@@ -27,8 +18,8 @@ const flightInfo = data => {
     arrival_location
   };
 };
+
 const postAdminDetials = data => post("admins", data, getAdminsDetials);
-const getAdminsDetials = id => get("admins", id);
 const postFlight = data => post("flights", data ,getFlights);
 const deleteFlight = id => deleted("flights", id);
 const postAirport = data => post("airports", data);
@@ -36,6 +27,16 @@ const getAirports = id => get("airports", id);
 const deleteAirport = id => deleted("airports", id);
 const deleteAdminDetails = async id => {
     return await db('admins').where('user_id',id).del()
+}
+const getAdminsDetials = async id => { 
+ if (id) {
+    const data = await db('admins as ad')
+    .select('ad.user_id','air.airport_name','ad.admin_location')
+    .join('airports as air','air.id','ad.airport_id')
+    .where("ad.user_id", id)
+    .first();
+    return data;
+  }
 }
 const getFlights = async id => {
   let data;

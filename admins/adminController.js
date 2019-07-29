@@ -31,8 +31,17 @@ const addAdminDetails = async (req, res) => {
     return statusHandler(res, 500, "Something went wrong");
   }
 };
+const getAdmin = async(req ,res) =>{
+    const {id} =req.params
+    try{
+        
+    }catch(err){
+        return statusHandler(res, 500, "Something went wrong");
+    }
+}
 
 module.exports = {
   makeRemoveAdmin,
-  addAdminDetails
+  addAdminDetails,
+  getAdmin
 };
