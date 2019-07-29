@@ -29,12 +29,14 @@ const flightInfo = data => {
 };
 const postAdminDetials = data => post("admins", data, getAdminsDetials);
 const getAdminsDetials = id => get("admins", id);
-const deleteAdminDetails = id => deleted("admins", id);
 const postFlight = data => post("flights", data ,getFlights);
 const deleteFlight = id => deleted("flights", id);
 const postAirport = data => post("airports", data);
 const getAirports = id => get("airports", id);
 const deleteAirport = id => deleted("airports", id);
+const deleteAdminDetails = async id => {
+    return await db('admins').where('user_id',id).del()
+}
 const getFlights = async id => {
   let data;
   if (id) {
