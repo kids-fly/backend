@@ -6,7 +6,6 @@ const deleted = async (name, id) => {
     .del();
 };
 const flightInfo = data => {
-    console.log(data)
   const departure_location = getAirports(data.departure_airport_id);
   const arrival_location = getAirports(data.arrival_airport_id);
   return ({
