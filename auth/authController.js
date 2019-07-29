@@ -6,7 +6,8 @@ const statusHandler = (res, code, data) => {
 const register = async (req, res) => {
   const { username, password } = req.body;
   try {
-    if (!!User.getUserByUsername(username)) {
+      const checkInfo = await User.getUserByUsername(username)
+    if (!!checkInfo) {
       return statusHandler(res, 400, "Username already exists");
     }
     const hashedPassword = crypted.hashPassword(password);
@@ -27,9 +28,24 @@ const login = async (req, res) => {
       return statusHandler(res, 400, "Wrong Password");
     }
     const token = crypted.generateToken(checkInfo);
-    req.session.user = token;
-    return statusHandler(res, 200, {status:'Login Succesful',message:`Welcome ${checkInfo.username}`);
+    req.session.user = token
+    return statusHandler(res, 200, {status:'Login Succesful',message:`Welcome ${checkInfo.username}`});
   } catch (err) {
     return statusHandler(res, 500, err.toString());
   }
 };
+const logout = async(req ,res) =>{
+    if (req.session) {
+        req.session.destroy(err => {
+          if (err) {
+            res.send('error logging out');
+          } else {
+            res.send(`Thanks for signing into kidsfly.\nHave a delightful flight.`);
+          }
+        });
+      }
+    }
+
+module.exports={
+    register,login,logout
+}

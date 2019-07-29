@@ -5,6 +5,7 @@ const router = require("./router");
 const server = express();
 const session = require("express-session");
 const KnexSessionStore = require("connect-session-knex")(session);
+const csurf = require('csurf')
 const store = new KnexSessionStore(/* options here */);
 require("dotenv").config();
 const port = process.env.PORT || 2020;
@@ -12,8 +13,6 @@ server.use(helmet());
 server.use(cors());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
-server.use("/", router);
-
 server.use(
   session({
     name: "KidsFly", // default is connect.sid
@@ -28,6 +27,14 @@ server.use(
     store: store
   })
 );
+server.use(csurf({cookie:false}))
+server.use(function crsfProtection(err, req,res,next){
+  if(err.code!=='EBADCSRFTOKEN'){
+    return res.status(403).json('Form tampered')
+  }
+  next()
+})
+server.use("/api", router);
 
 server.listen(port, () => {
   console.log(`\n=== Server listening into the future at ${port}\n`);

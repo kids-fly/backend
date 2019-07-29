@@ -5,7 +5,7 @@ const postUser = async data => {
   return await db('users').where('id' ,id).first()
 };
 const getUserByUsername = async(username) =>{
-    return await db("users").where('usernane',username).first()
+    return await db("users").where('username',username).first()
 }
 module.exports = {
     postUser,getUserByUsername}
