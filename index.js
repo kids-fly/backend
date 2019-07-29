@@ -28,6 +28,7 @@ server.use(
   })
 );
 server.use(csurf({cookie:false}))
+
 server.use(function crsfProtection(err, req,res,next){
   if(err.code!=='EBADCSRFTOKEN'){
     return res.status(403).json('Form tampered')

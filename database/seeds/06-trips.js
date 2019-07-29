@@ -9,7 +9,8 @@ exports.seed = function(knex, Promise) {
           id: 1,
           user_id: 1,
           flight_id: 2,
-          admin_id: 1,
+          departure_admin_id: 1,
+          arrival_admin_id: 2,
           no_of_kids: 3,
           isArrived: false
         },
@@ -17,7 +18,8 @@ exports.seed = function(knex, Promise) {
           id: 2,
           user_id: 2,
           flight_id: 2,
-          admin_id: 3,
+          departure_admin_id: 3,
+          arrival_admin_id: 2,
           no_of_kids: 2,
           isArrived: false
         },
@@ -25,7 +27,8 @@ exports.seed = function(knex, Promise) {
           id: 3,
           user_id: 7,
           flight_id: 3,
-          admin_id: 2,
+          departure_admin_id: 2,
+          arrival_admin_id: 1,
           no_of_kids: 1,
           isArrived: true
         }
