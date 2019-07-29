@@ -36,7 +36,12 @@ server.use(function crsfProtection(err, req,res,next){
   next()
 })
 
-
+server.get('/', (req, res) => {
+  res.status(200).json({
+    status: 200,
+    data: ['This is the default route'],
+  });
+});
 server.use("/api", router);
 
 
