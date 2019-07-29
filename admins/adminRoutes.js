@@ -15,4 +15,5 @@ const Admin = require("./adminController");
 // router.get('/airports/:id', Admin.getAirport)
 // router.get('/users', Admin.getAllAssignedUsers)
 
+
 module.exports = router;

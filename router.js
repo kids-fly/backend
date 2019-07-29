@@ -6,7 +6,7 @@ const authRoute = require("./auth/authRoutes");
 const tripRoute = require("./trips/tripRoutes");
 
 router.use("/auth", authRoute);
-router.use("/users/:id", userRoute);
+router.use("/users", userRoute);
 router.use("/admin", adminRoute);
 router.use("/users/:id/trips", tripRoute);
 

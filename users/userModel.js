@@ -18,10 +18,12 @@ const getUsers = async id => {
   return data.map(user => userInfo(user));
 };
 const updateUser = async (id, data) => {
-  const [id] = await db("users")
+    console.log(id ,data)
+  const userid = await db("users")
     .where("id", id)
     .update(data);
-  return getUsers(id);
+    
+  return getUsers(userid);
 };
 
 module.exports = {
