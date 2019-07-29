@@ -35,7 +35,10 @@ server.use(function crsfProtection(err, req,res,next){
   }
   next()
 })
+
+
 server.use("/api", router);
+
 
 server.listen(port, () => {
   console.log(`\n=== Server listening into the future at ${port}\n`);

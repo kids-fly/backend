@@ -18,8 +18,9 @@ const makeRemoveAdmin = async (req, res) => {
 };
 const addAdminDetails = async (req, res) => {
   const { userId } = req.params;
-  const data = await User.getUsers(userId);
   const { airport_id, admin_location } = req.body;
+  const data = await User.getUsers(userId);
+ 
   try {
     const newData = await Admin.postAdminDetials({
       user_id: data.id,
@@ -31,17 +32,41 @@ const addAdminDetails = async (req, res) => {
     return statusHandler(res, 500, "Something went wrong");
   }
 };
-const getAdmin = async(req ,res) =>{
-    const {id} =req.params
-    try{
-        
+const addAirport = async(req , res) => {
+    
+    try{ 
+        const {airport_name, airport_location} = req.body
+        const data = await Admin.postAirport({airport_name, airport_location})
+        return statusHandler(res, 201 , data)
     }catch(err){
-        return statusHandler(res, 500, "Something went wrong");
+        return statusHandler(res, 500 ,"Something went wrong")
+    }
+}
+const addFlight = async(req ,res) =>{
+    const {
+        departure_airport_id,
+        departure_time,
+        arrival_airport_id,
+        arrival_time,
+        airline_name
+    } = req.body
+    try{
+        const data = await Admin.postFlight({
+        departure_airport_id,
+        departure_time,
+        arrival_airport_id,
+        arrival_time,
+        airline_name
+        })
+        return statusHandler(res , 201 , data)
+    }catch(err){
+        return statusHandler(res, 500, err.toString());
     }
 }
 
 module.exports = {
-  makeRemoveAdmin,
+  makeRemoveAdmin, 
   addAdminDetails,
-  getAdmin
+  addFlight,
+  addAirport,
 };

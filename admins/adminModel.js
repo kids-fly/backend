@@ -1,29 +1,44 @@
 const db = require("../database/dbConfig");
 
-const post = async (name, data, action) => {
-  const [id] = await db(name).insert(data);
-  return action(id);
-};
 const deleted = async (name, id) => {
   return await db(name)
     .where("id", id)
     .del();
 };
 const flightInfo = data => {
+    console.log(data)
   const departure_location = getAirports(data.departure_airport_id);
   const arrival_location = getAirports(data.arrival_airport_id);
-  return {
-    ...data,
-    departure_location,
-    arrival_location
-  };
+  return ({
+      id:data.id,
+      departure_airport_id:data.departure_airport_id,
+      departure_location,
+      departure_time:data.departure_time,
+      arrival_airport_id:data.arrival_airport_id,
+      arrival_location,
+      arrival_time:data.arrival_time,
+      airline_name:data.airline_name
+  })
 };
 
-const postAdminDetials = data => post("admins", data, getAdminsDetials);
-const postFlight = data => post("flights", data ,getFlights);
+const postAdminDetials = async data => {
+     const [id] = await db('admins').insert(data);
+  return getAdminsDetials(id);
+}
+const postFlight = async data => {
+    const [id] = await db('flights').insert(data);
+ return getFlights(id);
+}
+
+const postAirport = async data => {
+    const [id] = await db('airports').insert(data);
+ return getAirports(id);
+}
 const deleteFlight = id => deleted("flights", id);
-const postAirport = data => post("airports", data);
-const getAirports = id => get("airports", id);
+const getAirports = async id =>{
+    data = await db("airports").where("id", id);
+    return data;
+}
 const deleteAirport = id => deleted("airports", id);
 const deleteAdminDetails = async id => {
     return await db('admins').where('user_id',id).del()
@@ -41,7 +56,7 @@ const getAdminsDetials = async id => {
 const getFlights = async id => {
   let data;
   if (id) {
-    data = await db("flights").where("id", id);
+    data = await db("flights").where("id", id).first();
     return flightInfo(data);
   }
   data = await db("flights");
