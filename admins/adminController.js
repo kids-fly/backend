@@ -76,6 +76,14 @@ try{
 return statusHandler(res , 500 , 'Flight could not be deleted')
 }
 }
+const getFlights = async(req ,res) => {
+    try{
+        const data = await Admin.getFlights()
+        return statusHandler(res ,200 ,data)
+    }catch(err){
+        return statusHandler(res ,500 , 'Failed to get all flights')
+    }
+}
 
 module.exports = {
   makeRemoveAdmin, 
