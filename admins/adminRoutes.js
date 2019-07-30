@@ -9,6 +9,7 @@ router.post('/flights', Admin.addFlight)
 router.delete('/flights',Admin.removeFlight)
 router.get('/airports/:id', Admin.getAirport)
 router.post('/airports', Admin.addAirport)
+//router.patch('/:id/location', Admin.editDetails)
 // router.delete('/airports/:id', Admin.removeAirport)
 
 

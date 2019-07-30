@@ -32,15 +32,7 @@ const addAdminDetails = async (req, res) => {
     return statusHandler(res, 500, "Something went wrong");
   }
 };
-const addAirport = async (req, res) => {
-  try {
-    const { airport_name, airport_location } = req.body;
-    const data = await Admin.postAirport({ airport_name, airport_location });
-    return statusHandler(res, 201, data);
-  } catch (err) {
-    return statusHandler(res, 500, "Flight not added");
-  }
-};
+
 const addFlight = async (req, res) => {
   const {
     departure_airport_id,
@@ -60,19 +52,6 @@ const addFlight = async (req, res) => {
     return statusHandler(res, 201, data);
   } catch (err) {
     return statusHandler(res, 500, err.toString());
-  }
-};
-const removeFlight = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const data = await Admin.getFlights(id);
-    if (!data) {
-      return statusHandler(res, 404, "Flight not Found");
-    }
-    await Admin.deleteFlight(data.id);
-    return statusHandler(res, 200, "Flight Deleted");
-  } catch (err) {
-    return statusHandler(res, 500, "Flight could not be deleted");
   }
 };
 const getFlights = async (req, res) => {
@@ -95,6 +74,29 @@ const getFlight = async (req, res) => {
     return statusHandler(res, 500, "Failed to get flight");
   }
 };
+
+const removeFlight = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await Admin.getFlights(id);
+      if (!data) {
+        return statusHandler(res, 404, "Flight not Found");
+      }
+      await Admin.deleteFlight(data.id);
+      return statusHandler(res, 200, "Flight Deleted");
+    } catch (err) {
+      return statusHandler(res, 500, "Flight could not be deleted");
+    }
+  };
+  const addAirport = async (req, res) => {
+    try {
+      const { airport_name, airport_location } = req.body;
+      const data = await Admin.postAirport({ airport_name, airport_location });
+      return statusHandler(res, 201, data);
+    } catch (err) {
+      return statusHandler(res, 500, "Flight not added");
+    }
+  };
 const getAirport = async (req, res) => {
   const { id } = req.params;
   try {
@@ -107,6 +109,19 @@ const getAirport = async (req, res) => {
     return statusHandler(res, 500, "Failed to get Airport");
   }
 };
+const removeAirport = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const data = await Admin.getAirports(id);
+      if (!data) {
+        return statusHandler(res, 404, "Airport not Found");
+      }
+      await Admin.deleteAirport(data.id);
+      return statusHandler(res, 200, "Airport Deleted");
+    } catch (err) {
+      return statusHandler(res, 500, "Airport could not be deleted");
+    }
+  };
 module.exports = {
   makeRemoveAdmin,
   addAdminDetails,
@@ -115,5 +130,6 @@ module.exports = {
   removeFlight,
   getFlights,
   getFlight,
-  getAirport
+  getAirport,
+  removeAirport,
 };
