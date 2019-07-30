@@ -39,7 +39,7 @@ const addAirport = async(req , res) => {
         const data = await Admin.postAirport({airport_name, airport_location})
         return statusHandler(res, 201 , data)
     }catch(err){
-        return statusHandler(res, 500 ,"Something went wrong")
+        return statusHandler(res, 500 ,"Flight not added")
     }
 }
 const addFlight = async(req ,res) =>{
@@ -63,10 +63,24 @@ const addFlight = async(req ,res) =>{
         return statusHandler(res, 500, err.toString());
     }
 }
+const removeFlight = async(req,res) => {
+    const {id} = req.params
+try{
+    const data = await Admin.getFlights(id)
+    if(!data){
+        return statusHandler(res ,404 , 'Flight not Found')
+    }
+    await Admin.deleteFlight(data.id)
+    return statusHandler(res , 200 ,'Flight Deleted')
+}catch(err){
+return statusHandler(res , 500 , 'Flight could not be deleted')
+}
+}
 
 module.exports = {
   makeRemoveAdmin, 
   addAdminDetails,
   addFlight,
   addAirport,
+  removeFlight,
 };
