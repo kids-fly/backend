@@ -24,43 +24,49 @@ const postAdminDetials = async data => {
      const [id] = await db('admins').insert(data);
   return getAdminsDetials(id);
 }
+const getAdminsDetials = async id => { 
+    if (id) {
+       const data = await db('admins as ad')
+       .select('ad.user_id','air.airport_name','ad.admin_location')
+       .join('airports as air','air.id','ad.airport_id')
+       .where("ad.user_id", id)
+       .first();
+       return data;
+     }
+   }
+   const deleteAdminDetails = async id => {
+    return await db('admins').where('user_id',id).del()
+}
+const updateAdminDetails = async (id,changes) => {
+    const data = await db('admins').where('user_id',id).update(changes)
+    return getAdminsDetials(data)
+}
 const postFlight = async data => {
     const [id] = await db('flights').insert(data);
  return getFlights(id);
 }
+const getFlights = async id => {
+    let data;
+    if (id) {
+      data = await db("flights").where("id", id).first();
+      return flightInfo(data);
+    }
+    data = await db("flights");
+    return data.map(flight => flightInfo(flight));
+  };
 
-const postAirport = async data => {
-    const [id] = await db('airports').insert(data);
- return getAirports(id);
-}
+
 const deleteFlight = id => deleted("flights", id);
+
 const getAirports = async id =>{
     data = await db("airports").where("id", id).first();
     return data;
 }
+const postAirport = async data => {
+    const [id] = await db('airports').insert(data);
+ return getAirports(id);
+}
 const deleteAirport = id => deleted("airports", id);
-const deleteAdminDetails = async id => {
-    return await db('admins').where('user_id',id).del()
-}
-const getAdminsDetials = async id => { 
- if (id) {
-    const data = await db('admins as ad')
-    .select('ad.user_id','air.airport_name','ad.admin_location')
-    .join('airports as air','air.id','ad.airport_id')
-    .where("ad.user_id", id)
-    .first();
-    return data;
-  }
-}
-const getFlights = async id => {
-  let data;
-  if (id) {
-    data = await db("flights").where("id", id).first();
-    return flightInfo(data);
-  }
-  data = await db("flights");
-  return data.map(flight => flightInfo(flight));
-};
 
 const getAllusers = async id => {
   const data = await db("admins as ad")
@@ -89,5 +95,6 @@ module.exports = {
   postAirport,
   getAirports,
   deleteAirport,
-  getAllusers
+  getAllusers,
+  updateAdminDetails,
 };

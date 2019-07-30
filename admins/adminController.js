@@ -19,11 +19,9 @@ const makeRemoveAdmin = async (req, res) => {
 const addAdminDetails = async (req, res) => {
   const { userId } = req.params;
   const { airport_id, admin_location } = req.body;
-  const data = await User.getUsers(userId);
-
   try {
     const newData = await Admin.postAdminDetials({
-      user_id: data.id,
+      user_id: userId,
       airport_id,
       admin_location
     });
@@ -32,7 +30,21 @@ const addAdminDetails = async (req, res) => {
     return statusHandler(res, 500, "Something went wrong");
   }
 };
+const editDetails =async(req ,res) => {
+    const {userId} = req.params;
+    const {airport_id , admin_location} = req.body;
+    try{
 
+        const newData = await Admin.postAdminDetials({
+            user_id: userId,
+            airport_id,
+            admin_location
+          });
+          return statusHandler(res, 201, newData)
+    }catch(err){
+        return statusHandler(res ,500 , "Something went wrong")
+    }
+}
 const addFlight = async (req, res) => {
   const {
     departure_airport_id,
@@ -57,6 +69,9 @@ const addFlight = async (req, res) => {
 const getFlights = async (req, res) => {
   try {
     const data = await Admin.getFlights();
+    if (data.length === 0) {
+        return statusHandler(res, 200, "No Flights added");
+      }
     return statusHandler(res, 200, data);
   } catch (err) {
     return statusHandler(res, 500, "Failed to get all flights");
@@ -122,6 +137,19 @@ const removeAirport = async (req, res) => {
       return statusHandler(res, 500, "Airport could not be deleted");
     }
   };
+const getAllAssignedUser = async(req,res) => {
+    const {id} = req.params;
+    try{
+        const data = await Admin.getAllusers(id);
+        if(data.length === 0){
+            return status(res, 200 ,"No Assigned Client" )
+        }
+        return statusHandler(res ,200 ,data)
+    }
+    catch(err){
+        return statusHandler(res ,500 ,"Something went wrong")
+    }
+}
 module.exports = {
   makeRemoveAdmin,
   addAdminDetails,
@@ -132,4 +160,6 @@ module.exports = {
   getFlight,
   getAirport,
   removeAirport,
+  getAllAssignedUser,
+  editDetails
 };
