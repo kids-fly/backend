@@ -85,10 +85,26 @@ const getFlights = async(req ,res) => {
     }
 }
 
+
+const getFlight = async(req ,res) => {
+    const {id} = req.params
+    try{
+        const data = await Admin.getFlights(id)
+        if(!data){
+            return statusHandler(res ,404 , "Flight Not Found")
+        }
+        return statusHandler(res ,200 ,data)
+    }catch(err){
+        return statusHandler(res ,500 , 'Failed to get all flights')
+    }
+}
+
 module.exports = {
   makeRemoveAdmin, 
   addAdminDetails,
   addFlight,
   addAirport,
   removeFlight,
+  getFlights,
+  getFlight
 };

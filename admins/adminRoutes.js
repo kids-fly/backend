@@ -3,16 +3,18 @@ const router = express.Router();
 const Admin = require("./adminController");
 router.patch('/adminstatus/:id', Admin.makeRemoveAdmin)
 router.post('/:userId/details',Admin.addAdminDetails)
-router.post('/airports', Admin.addAirport)
+router.get('/flights', Admin.getFlights)
 router.post('/flights', Admin.addFlight)
 router.delete('/flights',Admin.removeFlight)
-//router.get('/flights', Admin.getFlights)
+
+
+// router.get('/flights/:id', Admin.getFlight)
 // router.delete('/airports/:id', Admin.removeAirport)
+router.post('/airports', Admin.addAirport)
 // router.get('/airports/:id', Admin.getAirport)
 
 
 
-// router.get('/flights/:id', Admin.getFlight)
 
 // router.get('/users', Admin.getAllAssignedUsers)
 
