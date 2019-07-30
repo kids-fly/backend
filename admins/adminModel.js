@@ -35,7 +35,7 @@ const postAirport = async data => {
 }
 const deleteFlight = id => deleted("flights", id);
 const getAirports = async id =>{
-    data = await db("airports").where("id", id);
+    data = await db("airports").where("id", id).first();
     return data;
 }
 const deleteAirport = id => deleted("airports", id);
