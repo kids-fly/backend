@@ -111,6 +111,14 @@ exports.up = function(knex) {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.text("user_location");
+        table
+        .integer("airport_id")
+        .unsigned()
+        .notNullable()
+        .references("id")
+        .inTable("airports")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
       });
   };
   

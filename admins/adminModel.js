@@ -5,10 +5,12 @@ const deleted = async (name, id) => {
     .where("id", id)
     .del();
 };
-const flightInfo = data => {
-  const departure_location = getAirports(data.departure_airport_id);
-  const arrival_location = getAirports(data.arrival_airport_id);
-  return ({
+const flightInfo = async data => {
+  const departure_airport = await getAirports(data.departure_airport_id);
+  const arrival_airport = await getAirports(data.arrival_airport_id);
+  const departure_location = departure_airport ? departure_airport.airport_location:'Unknown';
+  const arrival_location =arrival_airport ?arrival_airport.airport_location :'Uknown';
+  const value ={
       id:data.id,
       departure_airport_id:data.departure_airport_id,
       departure_location,
@@ -17,7 +19,8 @@ const flightInfo = data => {
       arrival_location,
       arrival_time:data.arrival_time,
       airline_name:data.airline_name
-  })
+  }
+  return value
 };
 
 const postAdminDetials = async data => {
@@ -49,24 +52,35 @@ const getFlights = async id => {
     let data;
     if (id) {
       data = await db("flights").where("id", id).first();
-      return flightInfo(data);
+      return await flightInfo(data);
     }
     data = await db("flights");
-    return data.map(flight => flightInfo(flight));
+    const value = await Promise.all(data.map(flight => flightInfo(flight)));
+    return value
   };
 
 
 const deleteFlight = id => deleted("flights", id);
 
 const getAirports = async id =>{
-    data = await db("airports").where("id", id).first();
-    return data;
+    if(id){
+        data = await db("airports").where("id", id).first();
+        return data;
+    }
+return await db('airports')
+  
 }
 const postAirport = async data => {
     const [id] = await db('airports').insert(data);
  return getAirports(id);
 }
-const deleteAirport = id => deleted("airports", id);
+const deleteAirport = async id => {
+    await db('flights as fl')
+    .where('fl.departure_airport_id',id)
+    .orWhere('fl.arrival_airport_id',id)
+    .del();
+    return await db('airports').where('id',id)
+};
 
 const getAllusers = async id => {
   const data = await db("admins as ad")
@@ -76,13 +90,20 @@ const getAllusers = async id => {
       "tr.no_of_kids",
       "fl.departure_time",
       "fl.arrival_time",
-      "arr.user_location"
+      "arr.user_location",
+      "ad.admin_location",
+      'air.airport_name',
     )
-    .join("trips as tr", "tr.admin_Id", "ad.id")
+    .join("trips as tr",function() {
+        this.on('tr.departure_admin_id', '=', 'ad.id')
+        .orOn('tr.arrival_admin_id', '=', 'ad.id')
+      })
     .join("users as us", "us.id", "tr.user_id")
     .join("flights as fl", "fl.id", "tr.flight_id")
     .join("arrivals as arr", "arr.user_trip_id", "tr.id")
+    .join('airports as air', 'air.id','arr.airport_id')
     .where("ad.id", id);
+
   return data;
 };
 module.exports = {

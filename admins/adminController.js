@@ -74,7 +74,7 @@ const getFlights = async (req, res) => {
       }
     return statusHandler(res, 200, data);
   } catch (err) {
-    return statusHandler(res, 500, "Failed to get all flights");
+    return statusHandler(res, 500, err.toString());
   }
 };
 const getFlight = async (req, res) => {
@@ -113,9 +113,9 @@ const removeFlight = async (req, res) => {
     }
   };
 const getAirport = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
   try {
-    const data = await Admin.getAirport(id);
+    const data = await Admin.getAirports(id);
     if (!data) {
       return statusHandler(res, 404, "Airport Not Found");
     }
@@ -137,7 +137,7 @@ const removeAirport = async (req, res) => {
       return statusHandler(res, 500, "Airport could not be deleted");
     }
   };
-const getAllAssignedUser = async(req,res) => {
+const getAllAssignedUsers = async(req,res) => {
     const {id} = req.params;
     try{
         const data = await Admin.getAllusers(id);
@@ -147,7 +147,7 @@ const getAllAssignedUser = async(req,res) => {
         return statusHandler(res ,200 ,data)
     }
     catch(err){
-        return statusHandler(res ,500 ,"Something went wrong")
+        return statusHandler(res ,500 ,err.toString())
     }
 }
 module.exports = {
@@ -160,6 +160,6 @@ module.exports = {
   getFlight,
   getAirport,
   removeAirport,
-  getAllAssignedUser,
+  getAllAssignedUsers,
   editDetails
 };

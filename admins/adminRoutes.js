@@ -7,11 +7,11 @@ router.patch('/:userId/details', Admin.editDetails)
 router.get('/flights', Admin.getFlights)
 router.get('/flights/:id', Admin.getFlight)
 router.post('/flights', Admin.addFlight)
-router.delete('/flights',Admin.removeFlight)
-router.get('/airports/:id', Admin.getAirport)
+router.delete('/flights/:id',Admin.removeFlight)
+router.get('/airports', Admin.getAirport)
 router.post('/airports', Admin.addAirport)
 router.delete('/airports/:id', Admin.removeAirport)
-router.get('/users', Admin.getAllAssignedUsers)
+router.get('/:id/users', Admin.getAllAssignedUsers)
 
 
 module.exports = router;
