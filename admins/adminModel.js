@@ -29,22 +29,22 @@ const flightInfo = async data => {
 
 const postAdminDetials = async data => {
      const [id] = await db('admins').insert(data);
-    return getAdminsDetials(id);
+    return getAdminsDetials(id, '');
 }
 const getAdminsDetials = async (id, adminId) => { 
        const data = await db('admins as ad')
        .select('ad.user_id','air.airport_name','ad.admin_location')
        .join('airports as air','air.id','ad.airport_id')
-       .where("ad.user_id", id).orWhere('ad.id',adminId)
+       .where("ad.id", id).orWhere('ad.id',adminId)
        .first();
        return data;
    }
    const deleteAdminDetails = async id => {
     return await db('admins').where('user_id',id).del()
 }
-const updateAdminDetails = async (id,changes) => {
-    const data = await db('admins').where('user_id',id).update(changes)
-    return getAdminsDetials(data)
+const updateAdminDetails = async (userid, changes) => {
+   const value = await db('admins').where('user_id',userid).update(changes)
+    return getAdminsDetials(value,'')
 }
 const postFlight = async data => {
     const [id] = await db('flights').insert(data);
@@ -104,7 +104,7 @@ const getAllusers = async id => {
     .join("flights as fl", "fl.id", "tr.flight_id")
     .join("arrivals as arr", "arr.user_trip_id", "tr.id")
     .join('airports as air', 'air.id','arr.airport_id')
-    .where("ad.id", id);
+    .where("ad.user_id", id);
 
   return data;
 };

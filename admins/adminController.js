@@ -3,10 +3,10 @@ const statusHandler = require("../helpers/statusHandler");
 const User = require("../users/userModel");
 const Trips  = require("../trips/tripModel")
 const makeRemoveAdmin = async (req, res) => {
-  const { id } = req.params;
+  const { userid } = req.params;
   try {
-    const data = await User.getUsers(id);
-    const newData = await User.updateUser(id, {
+    const data = await User.getUsers(userid);
+    const newData = await User.updateUser(userid, {
       isAdmin: !data.isAdmin
     });
     if (!newData.isAdmin) {
@@ -14,35 +14,35 @@ const makeRemoveAdmin = async (req, res) => {
     }
     return statusHandler(res, 201, newData);
   } catch (err) {
-    return statusHandler(res, 500, "Something went wrong");
+    return statusHandler(res, 500, err.toString());
   }
 };
+// check if user is admin
 const addAdminDetails = async (req, res) => {
-  const { userId } = req.params;
+  const { userid } = req.params;
   const { airport_id, admin_location } = req.body;
   try {
     const newData = await Admin.postAdminDetials({
-      user_id: userId,
+      user_id: userid,
       airport_id,
       admin_location
     });
     return statusHandler(res, 201, newData);
   } catch (err) {
-    return statusHandler(res, 500, "Something went wrong");
+    return statusHandler(res, 500, err.toString());
   }
 };
 const editDetails = async (req, res) => {
-  const { userId } = req.params;
-  const { airport_id, admin_location } = req.body;
+  const { airport_id , admin_location } = req.body;
   try {
-    const newData = await Admin.postAdminDetials({
-      user_id: userId,
+    const newData = await Admin.updateAdminDetails(req.user.id,{
+      user_id: req.user.id,
       airport_id,
       admin_location
     });
     return statusHandler(res, 201, newData);
   } catch (err) {
-    return statusHandler(res, 500, "Something went wrong");
+    return statusHandler(res, 500, err.toString());
   }
 };
 const addFlight = async (req, res) => {
@@ -138,11 +138,10 @@ const removeAirport = async (req, res) => {
   }
 };
 const getAllAssignedUsers = async (req, res) => {
-  const { id } = req.params;
   try {
-    const data = await Admin.getAllusers(id);
+    const data = await Admin.getAllusers(req.user.id);
     if (data.length === 0) {
-      return status(res, 200, "No Assigned Client");
+      return statusHandler(res, 404, "No Assigned Client");
     }
     return statusHandler(res, 200, data);
   } catch (err) {
@@ -156,11 +155,10 @@ const getTrips = async (req, res) => {
     const data = await Trips.getTrips(
       "",
       "",
-      '',
+      req.user.id,
       departure_time,
       airline_name,
     );
-    console.log(data)
     return statusHandler(res, 200, data);
   } catch (err) {
     return statusHandler(res, 500, err.toString());

@@ -2,6 +2,7 @@ const db = require("../database/dbConfig");
 const flights = require("../admins/adminModel");
 const user = require("../users/userModel");
 const tripInfo = async data => {
+  //   console.log(data);
   const users = await user.getUsers(data.user_id);
   const user_name = users.firstname !== null ? users.firstname : users.username;
   const flight = await flights.getFlights(data.flight_id);
@@ -28,22 +29,44 @@ const tripInfo = async data => {
     trip_id: data.id,
     user_name,
     no_of_kids: data.no_of_kids,
+    flight_id: data.flight_id,
     flight_details,
     airline: flight.airline_name,
     duration,
     admin_on: data.admin_on,
+    no_of_assigned_admins: data.no_of_assigned_admins,
+    departure_admin_id: data.departure_admin_id,
     departure_admin: admin1_user.firstname,
     departure_admin_location,
     departure_admin_contact: admin1_user.contact,
+    arrival_admin_id: data.arrival_admin_id,
     arrival_admin: admin2_user.firstname,
     arrival_admin_location,
     arrival_admin_contact: admin2_user.contact
   };
 };
 
-const getTrips = async (id, userId, airportid, departure_time, airline_name) => {
+const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
   if (id) {
     const newData = await db("trips as tr")
+      .select(
+        "tr.id",
+        "tr.user_id",
+        "tr.flight_id",
+        "fl.departure_time",
+        "fl.arrival_time",
+        "tr.departure_admin_id",
+        "tr.arrival_admin_id",
+        "tr.no_of_assigned_admins",
+        "tr.admin_on"
+      )
+      .join("flights as fl", "fl.id", "tr.flight_id")
+      .where("tr.id", id)
+      .first();
+    return await tripInfo(newData);
+  }
+  if (userId) {
+    const filteredData = await db("trips as tr")
       .join("flights as fl", "fl.id", "tr.flight_id")
       .select(
         "tr.id",
@@ -52,14 +75,17 @@ const getTrips = async (id, userId, airportid, departure_time, airline_name) => 
         "fl.departure_time",
         "fl.arrival_time",
         "tr.departure_admin_id",
-        "tr.arrival_admin_id"
+        "tr.arrival_admin_id",
+        "tr.no_of_assigned_admins",
+        "tr.admin_on"
       )
-      .where("tr.id", id)
-      .first();
-    return tripInfo(newData);
+      .where("tr.user_id", userId);
+    return await Promise.all(filteredData.map(filtered => tripInfo(filtered)));
   }
-  if(userId){
-    const filteredData =await db("trips as tr")
+  const admin = await db("admins as ad")
+    .where("ad.user_id", adminId)
+    .first();
+  const data = await db("trips as tr")
     .join("flights as fl", "fl.id", "tr.flight_id")
     .select(
       "tr.id",
@@ -67,71 +93,32 @@ const getTrips = async (id, userId, airportid, departure_time, airline_name) => 
       "tr.flight_id",
       "fl.departure_time",
       "fl.arrival_time",
-      "tr.departure_admin_id",
-      "tr.arrival_admin_id"
-    ).where('tr.user_id',userId)
-    return await Promise.all(filteredData.map(filtered =>tripInfo(filtered)));
-  }
-  if (departure_time || airline_name) {
-      console.log(airline_name)
-    const filteredData = await db("trips as tr")
-    .select(
-        "tr.id",
-        "tr.user_id",
-        "tr.flight_id",
-        "fl.departure_time",
-        "fl.arrival_time",
-        "tr.departure_admin_id",
-        "tr.arrival_admin_id"
-      )
-      .join("flights as fl", "fl.id", "tr.flight_id")
-    // .where("fl.departure_time", departure_time)
-    // .orWhere("fl.airline_name", airline_name);
-    return await Promise.all(filteredData.map(filtered =>tripInfo(filtered)));
-  }
-  if(departure_time && airline_name){
-    const filteredData = await db("trips as tr")
-    .join("flights as fl", "fl.id", "tr.flight_id")
-    .select(
-      "tr.id",
-      "tr.user_id",
-      "tr.flight_id",
-      "fl.departure_time",
-      "fl.arrival_time",
+      'fl.airline_name',
       "tr.departure_admin_id",
       "tr.arrival_admin_id"
     )
-    .where({
-        'fl.departure_time': departure_time,
-        'fl.airline_name':airline_name
-    }); 
-    return await Promise.all(filteredData.map(filtered =>tripInfo(filtered)));
-  }
-  return  await db("trips as tr")
-  .join("flights as fl", "fl.id", "tr.flight_id")
-  .select(
-    "tr.id",
-    "tr.user_id",
-    "tr.flight_id",
-    "fl.departure_time",
-    "fl.arrival_time",
-    "tr.departure_admin_id",
-    "tr.arrival_admin_id"
-  )
-    .where(function() {
-      this.where("fl.departure_airport_id", airportid).orWhere(
-        "fl.arrival_airport_id",
-        airportid
-      );
-    })
-    .map(trip => tripInfo(trip));
+    .where("fl.departure_airport_id", admin.airport_id)
+    .orWhere("fl.arrival_airport_id", admin.airport_id);
+    if (departure_time) {
+       const newData = await Promise.all(data.filter(trip => trip.departure_time === departure_time) )
+        return await Promise.all(newData.map(filtered => tripInfo(filtered)));
+      }
+      if (airline_name) {
+        const newData = await Promise.all(data.filter(trip => trip.airline_name === airline_name) )
+         return await Promise.all(newData.map(filtered => tripInfo(filtered)));
+       }
+      if (departure_time && airline_name) {
+        const newData = data.filter(trip => trip.departure_time === departure_time && trip.airline_name === airline_name)
+        return await Promise.all(newData.map(filtered => tripInfo(filtered)));
+      }
+  return await Promise.all(data.map(filtered => tripInfo(filtered)));
 };
 
-const updateTrip = async (id, data) => {
-  const tripId = await db("trips")
-    .where("id", id)
-    .update(data);
-  return getTrips(tripId);
+const updateTrip = async (tripId, data) => {
+  // console.log('anothercheck' ,data)
+  return await db("trips")
+    .update(data)
+    .where("id", tripId);
 };
 const deleteTrip = async id => {
   return await db("trips")

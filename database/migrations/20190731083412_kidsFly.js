@@ -1,3 +1,4 @@
+
 exports.up = function(knex) {
     return knex.schema
       .createTable("users", table => {
@@ -114,6 +115,14 @@ exports.up = function(knex) {
           .onDelete("CASCADE");
         table.text("user_location");
         table.boolean('isArriving');
+        table
+        .integer("airport_id")
+        .unsigned()
+        .notNullable()
+        .references("id")
+        .inTable("airports")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
         // table.enu('hasArrived', ['departure_airport', 'arrival_airport'])
   
       });
