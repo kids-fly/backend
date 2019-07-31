@@ -116,9 +116,10 @@ const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
 
 const updateTrip = async (tripId, data) => {
   // console.log('anothercheck' ,data)
-  return await db("trips")
+  await db("trips")
     .update(data)
     .where("id", tripId);
+    return getTrips(tripId,'','','','')
 };
 const deleteTrip = async id => {
   return await db("trips")
@@ -136,12 +137,11 @@ const postAssignAdmin = async (
     .select("departure_admin_id", "arrival_admin_id", "id");
   if (type === "departure") {
     const freeAdmins = [];
-    const AdminsNotInFlight = Trips.filter(
+    const AdminInFlight = Trips.filter(
       Trip => Trip.departure_admin_id === departure_admin_id
     );
-
     const Admin_id = await Promise.all(
-      AdminsNotInFlight.map(Admin => Admin.departure_admin_id)
+      AdminInFlight.map(Admin => Admin.departure_admin_id)
     );
     if (Admin_id.length <= 0) {
       freeAdmins.push(departure_admin_id);

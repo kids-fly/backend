@@ -9,6 +9,6 @@ const {authenticate} = require('./middleware/authentication')
 router.use("/auth", authRoute);
 router.use("/users", userRoute);
 router.use("/admin",adminRoute);
-router.use("/users/:id/trips",authenticate, tripRoute);
+router.use("/users/trips",authenticate, tripRoute);
 
 module.exports = router;

@@ -24,7 +24,7 @@ const scheduleTrip = async (req, res) => {
       const freedAdmins = await allFreeAdminInLocation.filter(
         checkAdmins => checkAdmins.length !== 0 && checkAdmins[0] !== id
       );
-
+    
       req.body.departure_admin_id =
         freedAdmins.length > 0 ? freedAdmins[0][0] : null;
     }
@@ -41,6 +41,7 @@ const scheduleTrip = async (req, res) => {
         freedAdmins.length > 0 ? freedAdmins[0][0] : null;
     }
     if ((no_of_assigned_admins === "2") & (admin_on === "both")) {
+        console.log(allAdminsinArrivalLocation)
       const allFreeAdminArrivals = await Promise.all(
         allAdminsinArrivalLocation.map(async admin =>
           Trips.postAssignAdmin(flight_id, "", admin.admin_id, "arrival")
@@ -52,7 +53,6 @@ const scheduleTrip = async (req, res) => {
 
       req.body.arrival_admin_id =
         freedAdminsArrivals.length > 0 ? freedAdminsArrivals[0][0] : null;
-
       const allFreeAdminDeparture = await Promise.all(
         allAdminsinDepartureLocation.map(async admin =>
           Trips.postAssignAdmin(flight_id, admin.admin_id, "", "departure")
@@ -86,6 +86,9 @@ const getTrips = async (req, res) => {
     // check if user is admin
     try{
         const data = await Trips.getTrips('',req.user.id,'','', '')
+        if(data.length === 0){
+            return statusHandler(res, 404 , 'No trips added')
+        }
         return statusHandler(res, 200 , data)
     }
     catch(err){
