@@ -23,7 +23,7 @@ const authenticate =async(req, res, next)=> {
         return res.status(401).json({ message: 'Not authorized' });
       
   }catch(err){
-    return statusHandler(res, 500 , err.toString())
+    return statusHandler(res, 500 , 'Something Went Wrong')
 
   }
 };

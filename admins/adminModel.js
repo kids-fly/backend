@@ -108,6 +108,7 @@ const getAllusers = async id => {
 
   return data;
 };
+
 module.exports = {
   postAdminDetials,
   getAdminsDetials,

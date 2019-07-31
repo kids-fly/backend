@@ -12,6 +12,7 @@ router.get('/airports', Admin.getAirport)
 router.post('/airports', Admin.addAirport)
 router.delete('/airports/:id', Admin.removeAirport)
 router.get('/:id/users', Admin.getAllAssignedUsers)
+router.get('/trips',Admin.getTrips)
 
 
 module.exports = router;

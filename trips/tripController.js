@@ -24,9 +24,9 @@ const scheduleTrip = async (req, res) => {
       const freedAdmins = await allFreeAdminInLocation.filter(
         checkAdmins => checkAdmins.length !== 0 && checkAdmins[0] !== id
       );
-    
 
-      req.body.departure_admin_id = freedAdmins.length > 0 ? freedAdmins[0][0] : null;
+      req.body.departure_admin_id =
+        freedAdmins.length > 0 ? freedAdmins[0][0] : null;
     }
     if (no_of_assigned_admins == "1" && admin_on === "arrival") {
       allFreeAdminInLocation = await Promise.all(
@@ -37,7 +37,8 @@ const scheduleTrip = async (req, res) => {
       const freedAdmins = await allFreeAdminInLocation.filter(
         checkAdmins => checkAdmins.length !== 0 && checkAdmins[0] !== id
       );
-      req.body.arrival_admin_id = freedAdmins.length >0 ? freedAdmins[0][0] : null;
+      req.body.arrival_admin_id =
+        freedAdmins.length > 0 ? freedAdmins[0][0] : null;
     }
     if ((no_of_assigned_admins === "2") & (admin_on === "both")) {
       const allFreeAdminArrivals = await Promise.all(
@@ -48,9 +49,9 @@ const scheduleTrip = async (req, res) => {
       const freedAdminsArrivals = await allFreeAdminArrivals.filter(
         checkAdmins => checkAdmins.length !== 0 && checkAdmins[0] !== id
       );
-      
-   
-      req.body.arrival_admin_id = freedAdminsArrivals.length>0 ? freedAdminsArrivals[0][0] : null;
+
+      req.body.arrival_admin_id =
+        freedAdminsArrivals.length > 0 ? freedAdminsArrivals[0][0] : null;
 
       const allFreeAdminDeparture = await Promise.all(
         allAdminsinDepartureLocation.map(async admin =>
@@ -60,7 +61,8 @@ const scheduleTrip = async (req, res) => {
       const freedAdminsDepartures = await allFreeAdminDeparture.filter(
         checkAdmins => checkAdmins.length !== 0 && checkAdmins[0] !== id
       );
-      req.body.departure_admin_id = freedAdminsDepartures.length>0 ? freedAdminsDepartures[0][0] : null;
+      req.body.departure_admin_id =
+        freedAdminsDepartures.length > 0 ? freedAdminsDepartures[0][0] : null;
     }
 
     const data = await Trips.postTrip({
@@ -78,8 +80,33 @@ const scheduleTrip = async (req, res) => {
   }
 };
 
+const getTrips = async (req, res) => {
+    // if user is an admin get all trips for his airport alone
+    // if user is a normal user get all trips by his user_id
+    // check if user is admin
+    try{
+        const data = await Trips.getTrips('',req.user.id,'','', '')
+        return statusHandler(res, 200 , data)
+    }
+    catch(err){
+        return statusHandler(res ,500 ,'Could not get trips')
+    }
+}
+   
+    const getTrip =async(req, res) =>{
+        const {id} = req.params
+        try{
+            const data = await Trips.getTrips(id,'','','', '')
+            return statusHandler(res, 200 , data)
+        }
+        catch(err){
+            return statusHandler(res ,500 ,'Could not get trips')
+        }
 
-const getTrips = async (req, res) => {};
+    }
+
 module.exports = {
-  scheduleTrip
+  scheduleTrip,
+  getTrips,
+  getTrip,
 };
