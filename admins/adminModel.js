@@ -6,6 +6,7 @@ const deleted = async (name, id) => {
     .del();
 };
 const flightInfo = async data => {
+    if(data !== undefined){
   const departure_airport = await getAirports(data.departure_airport_id);
   const arrival_airport = await getAirports(data.arrival_airport_id);
   const departure_location = departure_airport ? departure_airport.airport_location:'Unknown';
@@ -25,7 +26,9 @@ const flightInfo = async data => {
       airline_name:data.airline_name
   }
   return value
-};
+}
+return null
+}
 
 const postAdminDetials = async data => {
      const [id] = await db('admins').insert(data);

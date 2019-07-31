@@ -41,7 +41,6 @@ exports.up = function(knex) {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.text("admin_location").notNullable();
-        table.boolean('isOccupied')
       })
       .createTable("flights", table => {
         // chheck time format in knex

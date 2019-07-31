@@ -2,7 +2,7 @@ const db = require("../database/dbConfig");
 const flights = require("../admins/adminModel");
 const user = require("../users/userModel");
 const tripInfo = async data => {
-  //   console.log(data);
+ 
   const users = await user.getUsers(data.user_id);
   const user_name = users.firstname !== null ? users.firstname : users.username;
   const flight = await flights.getFlights(data.flight_id);
@@ -47,6 +47,24 @@ const tripInfo = async data => {
 };
 
 const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
+    if(id && userId){
+        const filteredData = await db("trips as tr")
+        .join("flights as fl", "fl.id", "tr.flight_id")
+        .select(
+          "tr.id",
+          "tr.user_id",
+          "tr.flight_id",
+          "fl.departure_time",
+          "fl.arrival_time",
+          "tr.departure_admin_id",
+          "tr.arrival_admin_id",
+          "tr.no_of_assigned_admins",
+          "tr.admin_on"
+        )
+    .where({"tr.user_id":userId, "tr.id":id});
+     return await tripInfo(filteredData);
+    
+      }
   if (id) {
     const newData = await db("trips as tr")
       .select(
@@ -79,7 +97,7 @@ const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
         "tr.no_of_assigned_admins",
         "tr.admin_on"
       )
-      .where("tr.user_id", userId);
+      .where("tr.user_id", userId );
     return await Promise.all(filteredData.map(filtered => tripInfo(filtered)));
   }
   const admin = await db("admins as ad")
@@ -114,16 +132,16 @@ const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
   return await Promise.all(data.map(filtered => tripInfo(filtered)));
 };
 
-const updateTrip = async (tripId, data) => {
-  // console.log('anothercheck' ,data)
+const updateTrip = async (tripId,userId, data) => {
+    console.log(tripId, userId)
   await db("trips")
     .update(data)
-    .where("id", tripId);
-    return getTrips(tripId,'','','','')
+    .where({"id":tripId, user_id:userId});
+    return getTrips(tripId,userId,'','','')
 };
-const deleteTrip = async id => {
+const deleteTrip = async (id, userId) => {
   return await db("trips")
-    .where("id", id)
+    .where({"id":id, user_id:userId})
     .del();
 };
 const postAssignAdmin = async (

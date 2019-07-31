@@ -9,6 +9,9 @@ const scheduleTrip = async (req, res) => {
   try {
     let allFreeAdminInLocation;
     checkFlight = await Admin.getFlights(flight_id);
+    if(!checkFlight){
+        return statusHandler(res , 404 , 'Flight Not Found')
+    }
     allAdminsinDepartureLocation = await User.getAllAdmins(
       checkFlight.departure_location
     );
@@ -41,7 +44,6 @@ const scheduleTrip = async (req, res) => {
         freedAdmins.length > 0 ? freedAdmins[0][0] : null;
     }
     if ((no_of_assigned_admins === "2") & (admin_on === "both")) {
-        console.log(allAdminsinArrivalLocation)
       const allFreeAdminArrivals = await Promise.all(
         allAdminsinArrivalLocation.map(async admin =>
           Trips.postAssignAdmin(flight_id, "", admin.admin_id, "arrival")
@@ -76,7 +78,7 @@ const scheduleTrip = async (req, res) => {
     });
     return statusHandler(res, 201, data);
   } catch (err) {
-    statusHandler(res, 500, err.toString());
+    statusHandler(res, 500, "something went wrong");
   }
 };
 
@@ -99,7 +101,7 @@ const getTrips = async (req, res) => {
     const getTrip =async(req, res) =>{
         const {id} = req.params
         try{
-            const data = await Trips.getTrips(id,'','','', '')
+            const data = await Trips.getTrips(id,req.user.id,'','', '')
             return statusHandler(res, 200 , data)
         }
         catch(err){
@@ -111,7 +113,7 @@ const getTrips = async (req, res) => {
         // user should only delete trips he created
         const {id} = req.params
         try{
-            data = await Trips.deleteTrip(id)
+            data = await Trips.deleteTrip(id, req.user.id)
             return statusHandler(res, 200 , "Trip deleted")
         }
         catch(err){
@@ -125,6 +127,9 @@ const getTrips = async (req, res) => {
         try {
             let allFreeAdminInLocation;
             checkFlight = await Admin.getFlights(flight_id);
+            if(!checkFlight){
+                return statusHandler(res , 404 , 'Flight Not Found')
+            }
             allAdminsinDepartureLocation = await User.getAllAdmins(
               checkFlight.departure_location
             );
@@ -180,9 +185,9 @@ const getTrips = async (req, res) => {
               req.body.departure_admin_id =
                 freedAdminsDepartures.length > 0 ? freedAdminsDepartures[0][0] : null;
             }
-    
+            console.log(flight_id)
         
-            const firstData = await Trips.updateTrip(id,
+            const firstData = await Trips.updateTrip(id,req.user.id,
                 {
               user_id: req.user.id || data.user_id,
               flight_id:flight_id || data.flight_id,
