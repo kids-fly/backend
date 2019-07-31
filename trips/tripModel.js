@@ -2,7 +2,7 @@ const db = require("../database/dbConfig");
 const flights = require("../admins/adminModel");
 const user = require("../users/userModel");
 const tripInfo = async data => {
- 
+if(data !==undefined){
   const users = await user.getUsers(data.user_id);
   const user_name = users.firstname !== null ? users.firstname : users.username;
   const flight = await flights.getFlights(data.flight_id);
@@ -44,10 +44,13 @@ const tripInfo = async data => {
     arrival_admin_location,
     arrival_admin_contact: admin2_user.contact
   };
-};
+}
+return null
+}
 
 const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
     if(id && userId){
+        console.log(id, userId)
         const filteredData = await db("trips as tr")
         .join("flights as fl", "fl.id", "tr.flight_id")
         .select(
@@ -61,7 +64,7 @@ const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
           "tr.no_of_assigned_admins",
           "tr.admin_on"
         )
-    .where({"tr.user_id":userId, "tr.id":id});
+    .where({"tr.user_id":userId, "tr.id":id}).first();
      return await tripInfo(filteredData);
     
       }

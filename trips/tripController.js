@@ -102,6 +102,9 @@ const getTrips = async (req, res) => {
         const {id} = req.params
         try{
             const data = await Trips.getTrips(id,req.user.id,'','', '')
+            if(!data){
+                return statusHandler(res ,401, 'Not Authorized')
+            }
             return statusHandler(res, 200 , data)
         }
         catch(err){
@@ -185,7 +188,6 @@ const getTrips = async (req, res) => {
               req.body.departure_admin_id =
                 freedAdminsDepartures.length > 0 ? freedAdminsDepartures[0][0] : null;
             }
-            console.log(flight_id)
         
             const firstData = await Trips.updateTrip(id,req.user.id,
                 {
@@ -197,9 +199,12 @@ const getTrips = async (req, res) => {
               departure_admin_id: req.body.departure_admin_id || data.departure_admin_id ,
               arrival_admin_id: req.body.arrival_admin_id || data.arrival_admin_id
             });
+            if(!firstData){
+                return statusHandler(res, 401 , 'Not Authorized')
+            }
             return statusHandler(res, 201, firstData);
           } catch (err) {
-            statusHandler(res, 500, err.toString());
+            statusHandler(res, 500, 'Something went wrong');
           }
     }
 
