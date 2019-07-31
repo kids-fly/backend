@@ -104,9 +104,21 @@ const getTrips = async (req, res) => {
         }
 
     }
+    const deleteTrip = async (req ,res) => {
+        // user should only delte trips he created
+        const {id} = req.params
+        try{
+            data = await Trips.deleteTrip(id)
+            return statusHandler(res, 200 , "Trip deleted")
+        }
+        catch(err){
+            return statusHandler(res ,500 , "Trip not deleted")
+        }
+    }
 
 module.exports = {
   scheduleTrip,
   getTrips,
   getTrip,
+  deleteTrip,
 };

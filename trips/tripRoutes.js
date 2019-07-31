@@ -6,9 +6,11 @@ const Trips = require('./tripController')
 router.get('/', Trips.getTrips)
 router.post('/', Trips.scheduleTrip)
 router.get('/:id', Trips.getTrip)
+router.delete('/:id', Trips.deleteTrip)
+
 // router.put('/:id', Trips.editTrip)
 
-// router.delete('/:id', Trips.deleteTrip)
+
 
 
 
