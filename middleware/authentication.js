@@ -8,20 +8,22 @@ const authenticate =async(req, res, next)=> {
   try{
     if (req.session && req.session.user) {
       const decrypt = await jwt.verify(req.session.user, process.env.JWT_SECRET)
+     
       const rows = await Users.getUsers(decrypt.subject)
       if(!rows){
         return statusHandler(res ,403,'Token not accessible')
       }
+
       req.user = {
         id: decrypt.subject,
-        usernname: decrypt.firstname,
+        username: decrypt.username,
       };
-        next();
-      } else {
-        res.status(401).json({ message: 'Not authorized' });
-      }
+         return next();
+      } 
+        return res.status(401).json({ message: 'Not authorized' });
+      
   }catch(err){
-    return statusHandler(res, 500 , "Something went wrong")
+    return statusHandler(res, 500 , err.toString())
 
   }
 };

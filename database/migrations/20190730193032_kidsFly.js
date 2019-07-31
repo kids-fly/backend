@@ -40,6 +40,7 @@ exports.up = function(knex) {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.text("admin_location").notNullable();
+        table.boolean('isOccupied')
       })
       .createTable("flights", table => {
         // chheck time format in knex
@@ -97,8 +98,9 @@ exports.up = function(knex) {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.integer("no_of_kids").unsigned();
-        table.boolean("isArriving");
-        table.boolean("isArrived");
+        table.enu('no_of_assigned_admins',[1 ,2]);
+        table.enu('admin_on',['departure','arrival','both'])
+        table.boolean("trip_completed");
       })
       .createTable("arrivals", table => {
         table.increments();
@@ -111,14 +113,9 @@ exports.up = function(knex) {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.text("user_location");
-        table
-        .integer("airport_id")
-        .unsigned()
-        .notNullable()
-        .references("id")
-        .inTable("airports")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        table.boolean('isArriving');
+        // table.enu('hasArrived', ['departure_airport', 'arrival_airport'])
+  
       });
   };
   

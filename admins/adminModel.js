@@ -9,14 +9,18 @@ const flightInfo = async data => {
   const departure_airport = await getAirports(data.departure_airport_id);
   const arrival_airport = await getAirports(data.arrival_airport_id);
   const departure_location = departure_airport ? departure_airport.airport_location:'Unknown';
+  const departure_airport_name = departure_airport ? departure_airport.airport_name:'Unknown';
   const arrival_location =arrival_airport ?arrival_airport.airport_location :'Uknown';
+  const arrival_airport_name =arrival_airport ?arrival_airport.airport_name :'Uknown';
   const value ={
       id:data.id,
       departure_airport_id:data.departure_airport_id,
       departure_location,
+      departure_airport_name,
       departure_time:data.departure_time,
       arrival_airport_id:data.arrival_airport_id,
       arrival_location,
+      arrival_airport_name,
       arrival_time:data.arrival_time,
       airline_name:data.airline_name
   }
@@ -25,17 +29,15 @@ const flightInfo = async data => {
 
 const postAdminDetials = async data => {
      const [id] = await db('admins').insert(data);
-  return getAdminsDetials(id);
+    return getAdminsDetials(id);
 }
-const getAdminsDetials = async id => { 
-    if (id) {
+const getAdminsDetials = async (id, adminId) => { 
        const data = await db('admins as ad')
        .select('ad.user_id','air.airport_name','ad.admin_location')
        .join('airports as air','air.id','ad.airport_id')
-       .where("ad.user_id", id)
+       .where("ad.user_id", id).orWhere('ad.id',adminId)
        .first();
        return data;
-     }
    }
    const deleteAdminDetails = async id => {
     return await db('admins').where('user_id',id).del()

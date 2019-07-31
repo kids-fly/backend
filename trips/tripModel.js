@@ -1,52 +1,81 @@
 const db = require("../database/dbConfig");
-const mapper = require("../helpers/mappers");
 const flights = require("../admins/adminModel");
-const user = require("../users/userController.spec");
-const tripInfo = data => {
+const user = require("../users/userModel");
+const tripInfo = async data => {
+  const users = await user.getUsers(data.user_id);
+  const user_name = users.firstname !== null ? users.firstname : users.username;
+  const flight = await flights.getFlights(data.flight_id);
+  const flight_details = `${flight.departure_airport_name} ${
+    flight.departure_location
+  } to ${flight.arrival_airport_name} ${flight.arrival_location} `;
+  const duration = `${flight.departure_time} to ${flight.arrival_time}`;
+  const admin1_data = await flights.getAdminsDetials(
+    "",
+    data.departure_admin_id
+  );
+  const admin1_user = admin1_data
+    ? await user.getUsers(admin1_data.user_id)
+    : "unknown";
+  const admin2_data = await flights.getAdminsDetials("", data.arrival_admin_id);
+  const admin2_user = admin2_data
+    ? await user.getUsers(admin2_data.user_id)
+    : "unknown";
+  const departure_admin_location =
+    admin1_data && (await admin1_data.admin_location);
+  const arrival_admin_location =
+    admin2_data && (await admin2_data.admin_location);
   return {
-    ...data,
-    isArriving: mapper(data.isArriving),
-    isArrived: mapper(data.isArrived),
-    flight_details: flights.getFlights(data.flight_id),
-    departure_admin: user.getUsers(
-      getAdminsDetials(data.departure_admin_id).user_id
-    ).firstname,
-    departure_admin_location: flights.getAdminsDetials(data.departure_admin_id)
-      .admin_location,
-    departure_admin_contact: user.getUsers(
-      getAdminsDetials(data.departure_admin_id).user_id
-    ).contact,
-    arrival_admin: user.getUsers(
-      getAdminsDetials(data.arrival_admin_id).user_id
-    ).firstname,
-    arrival_admin_location: flights.getAdminsDetials(data.arrival_admin_id)
-      .admin_location,
-    arrival_admin_contact: user.getUsers(
-      getAdminsDetials(data.arrival_admin_id).user_id
-    ).contact
+    trip_id: data.id,
+    user_name,
+    no_of_kids: data.no_of_kids,
+    flight_details,
+    airline: flight.airline_name,
+    duration,
+    admin_on: data.admin_on,
+    departure_admin: admin1_user.firstname,
+    departure_admin_location,
+    departure_admin_contact: admin1_user.contact,
+    arrival_admin: admin2_user.firstname,
+    arrival_admin_location,
+    arrival_admin_contact: admin2_user.contact
   };
 };
 
-const getTrips = async (id, airportid, departure_time, airline) => {
-  let data = await db("trips as tr").join(
-    "flights as fl",
-    "fl.id",
-    "tr.flight_id"
-  );
+const getTrips = async (id, userId, airportid, departure_time, airline) => {
   if (id) {
-    const newData = data
-      .select("*")
+    const newData = await db("trips as tr")
+      .join("flights as fl", "fl.id", "tr.flight_id")
+      .select(
+        "tr.id",
+        "tr.user_id",
+        "tr.flight_id",
+        "fl.departure_time",
+        "fl.arrival_time",
+        "tr.departure_admin_id",
+        "tr.arrival_admin_id"
+      )
       .where("tr.id", id)
       .first();
     return tripInfo(newData);
   }
   if (departure_time || airline) {
-    const filteredData = data.select("*").where(function() {
-      this.where("fl.departure_time", departure_time).orWhere(
-        "fl.airline_name",
-        airline
-      );
-    });
+    const filteredData = await db("trips as tr")
+      .join("flights as fl", "fl.id", "tr.flight_id")
+      .select(
+        "tr.id",
+        "tr.user_id",
+        "tr.flight_id",
+        "fl.departure_time",
+        "fl.arrival_time",
+        "tr.departure_admin_id",
+        "tr.arrival_admin_id"
+      )
+      .where(function() {
+        this.where("fl.departure_time", departure_time).orWhere(
+          "fl.airline_name",
+          airline
+        );
+      });
     return tripInfo(filteredData);
   }
   return data
@@ -61,25 +90,58 @@ const getTrips = async (id, airportid, departure_time, airline) => {
 };
 
 const updateTrip = async (id, data) => {
-  const [id] = await db("trips")
+  const tripId = await db("trips")
     .where("id", id)
     .update(data);
-  return getTrips(id);
+  return getTrips(tripId);
 };
 const deleteTrip = async id => {
   return await db("trips")
     .where("id", id)
     .del();
 };
-const postAssignAdmin = async (id, data) => {
-  const [id] = await db("trips")
-    .where("id", id)
-    .update(data);
-  return getTrips(id);
+const postAssignAdmin = async (
+  flight_id,
+  departure_admin_id,
+  arrival_admin_id,
+  type
+) => {
+  const Trips = await db("trips")
+    .where("flight_id", flight_id)
+    .select("departure_admin_id", "arrival_admin_id", "id");
+  if (type === "departure") {
+    const freeAdmins = [];
+    const AdminsNotInFlight = Trips.filter(
+      Trip => Trip.departure_admin_id === departure_admin_id
+    );
+
+    const Admin_id = await Promise.all(
+      AdminsNotInFlight.map(Admin => Admin.departure_admin_id)
+    );
+    if (Admin_id.length <= 0) {
+      freeAdmins.push(departure_admin_id);
+    }
+    return freeAdmins;
+  }
+  if (type === "arrival") {
+    const freeAdmins = [];
+    const AdminsInFlight = Trips.filter(
+      Trip => Trip.arrival_admin_id === arrival_admin_id
+    );
+
+    const Admin_id = await Promise.all(
+      AdminsInFlight.map(Admin => Admin.arrival_admin_id)
+    );
+    if (Admin_id <= 0) {
+      freeAdmins.push(arrival_admin_id);
+    }
+    return freeAdmins;
+  }
 };
-const postTrip = async (data, admindata) => {
+
+const postTrip = async data => {
   const [id] = await db("trips").insert(data);
-  return postAssignAdmin(id, admindata);
+  return getTrips(id);
 };
 const postArrivals = async data => {
   const [id] = await db("arrivals").insert(data);
@@ -107,5 +169,6 @@ module.exports = {
   postTrip,
   postArrivals,
   updateArrivals,
-  deleteArrivals
+  deleteArrivals,
+  postAssignAdmin
 };

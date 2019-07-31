@@ -24,8 +24,15 @@ const updateUser = async (id, data) => {
     
   return getUsers(userid);
 };
-
+const getAllAdmins = async(location) => {
+    return await db('users as us')
+    .select('us.id','ad.id as admin_id','us.firstname','us.lastname','ad.admin_location','air.airport_location')
+    .join('admins as ad', 'ad.user_id', 'us.id')
+    .join('airports as air', 'ad.airport_id', 'air.id') 
+    .where( 'air.airport_location',location)
+}
 module.exports = {
   getUsers,
-  updateUser
+  updateUser,
+  getAllAdmins,
 };
