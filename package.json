@@ -8,7 +8,8 @@
     "migrate": "NODE_ENV=production npx knex migrate:latest",
     "down": "NODE_ENV=production npx knex migrate:down",
     "restart":"NODE_ENV=production heroku restart && heroku pg:reset DATABASE --confirm kids-fly",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "cross-env DB_ENV=testing jest --watch --verbose"
   },
   "jest": {
     "testEnvironment": "node"

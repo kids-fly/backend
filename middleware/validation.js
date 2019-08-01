@@ -17,7 +17,7 @@ const validate = (value, scheme, res, next) => {
       });
   };
 
-  const auth = (req, res, next) => { return validate(req.body, schema.signupSchema, res, next); }
+  const auth = (req, res, next) => { validate(req.body, schema.signupSchema, res, next); }
   const editProfile = (req, res, next) => { validate(req.body, schema.userProfileSchema, res, next); }
   const idSchema = (req , res , next) => {validate(req.params.id, schema.id, res, next); }
   const postTrip = (req , res , next) => {validate(req.body, schema.postTripSchema, res, next); }
@@ -29,6 +29,7 @@ const validate = (value, scheme, res, next) => {
 
 
  module.exports = {
+     validate,
      auth,
      editProfile,
      idSchema,

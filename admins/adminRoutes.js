@@ -11,9 +11,8 @@ const {
 router.patch("/adminstatus/:id", idSchema, Admin.makeRemoveAdmin);
 router.post("/details", postAdmin, Admin.addAdminDetails);
 router.put("/details", editAdmin, Admin.editDetails);
-router.get("/flights", Admin.getFlights);
-router.get("/flights/:id", idSchema, Admin.getFlight);
 router.post("/flights", postFlight, Admin.addFlight);
+router.get("/flights", Admin.getFlights);
 router.delete("/flights/:id", idSchema, Admin.removeFlight);
 router.get("/airports", Admin.getAirport);
 router.post("/airports", postAirport, Admin.addAirport);

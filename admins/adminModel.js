@@ -118,7 +118,8 @@ const getAllusers = async id => {
       "fl.arrival_time",
       "arr.user_location",
       "ad.admin_location",
-      "air.airport_name"
+      "air.airport_name",
+      "tr.trip_completed",
     )
     .join("trips as tr", function() {
       this.on("tr.departure_admin_id", "=", "ad.id").orOn(

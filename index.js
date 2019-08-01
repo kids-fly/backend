@@ -42,9 +42,11 @@ server.get('/', (req, res) => {
     data: ['This is the default route'],
   });
 });
-server.use("/api", router);
+server.use("/", router);
 
 
 server.listen(port, () => {
   console.log(`\n=== Server listening into the future at ${port}\n`);
 });
+
+module.exports =server
