@@ -11,13 +11,12 @@ if(data !==undefined){
   } to ${flight.arrival_airport_name} ${flight.arrival_location} `;
   const duration = `${flight.departure_time} to ${flight.arrival_time}`;
   const admin1_data = await flights.getAdminsDetials(
-    "",
-    data.departure_admin_id
+    data.departure_admin_id,""
   );
   const admin1_user = admin1_data
     ? await user.getUsers(admin1_data.user_id)
     : "unknown";
-  const admin2_data = await flights.getAdminsDetials("", data.arrival_admin_id);
+  const admin2_data = await flights.getAdminsDetials(data.arrival_admin_id,"");
   const admin2_user = admin2_data
     ? await user.getUsers(admin2_data.user_id)
     : "unknown";
@@ -50,7 +49,6 @@ return null
 
 const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
     if(id && userId){
-        console.log(id, userId)
         const filteredData = await db("trips as tr")
         .join("flights as fl", "fl.id", "tr.flight_id")
         .select(
@@ -136,7 +134,6 @@ const getTrips = async (id, userId, adminId, departure_time, airline_name) => {
 };
 
 const updateTrip = async (tripId,userId, data) => {
-    console.log(tripId, userId)
   await db("trips")
     .update(data)
     .where({"id":tripId, user_id:userId});

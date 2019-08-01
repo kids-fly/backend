@@ -1,12 +1,12 @@
 const Admin = require("./adminModel");
 const statusHandler = require("../helpers/statusHandler");
 const User = require("../users/userModel");
-const Trips  = require("../trips/tripModel")
+const Trips = require("../trips/tripModel");
 const makeRemoveAdmin = async (req, res) => {
-  const { userid } = req.params;
+  const { id } = req.params;
   try {
-    const data = await User.getUsers(userid);
-    const newData = await User.updateUser(userid, {
+    const data = await User.getUsers(id);
+    const newData = await User.updateUser(id, {
       isAdmin: !data.isAdmin
     });
     if (!newData.isAdmin) {
@@ -19,26 +19,30 @@ const makeRemoveAdmin = async (req, res) => {
 };
 // check if user is admin
 const addAdminDetails = async (req, res) => {
-  const { userid } = req.params;
   const { airport_id, admin_location } = req.body;
   try {
-    const newData = await Admin.postAdminDetials({
-      user_id: userid,
+    const newData = await Admin.postAdminDetials(req.user.id, {
+      user_id: req.user.id,
       airport_id,
       admin_location
     });
+    if (!newData) {
+      return statusHandler(res, 400, "You can only edit details");
+    }
     return statusHandler(res, 201, newData);
   } catch (err) {
     return statusHandler(res, 500, err.toString());
   }
 };
 const editDetails = async (req, res) => {
-  const { airport_id , admin_location } = req.body;
+  const { airport_id, admin_location } = req.body;
+
   try {
-    const newData = await Admin.updateAdminDetails(req.user.id,{
+    const oldData = await Admin.getAdminsDetials("", req.user.id);
+    const newData = await Admin.updateAdminDetails(req.user.id, {
       user_id: req.user.id,
-      airport_id,
-      admin_location
+      airport_id: airport_id || oldData.airport_id,
+      admin_location: admin_location || oldData.admin_location
     });
     return statusHandler(res, 201, newData);
   } catch (err) {
@@ -149,7 +153,7 @@ const getAllAssignedUsers = async (req, res) => {
   }
 };
 const getTrips = async (req, res) => {
-  const { departure_time, airline_name} = req.query;
+  const { departure_time, airline_name } = req.query;
   try {
     // const airportId = ''||req.admin.airportId;
     const data = await Trips.getTrips(
@@ -157,7 +161,7 @@ const getTrips = async (req, res) => {
       "",
       req.user.id,
       departure_time,
-      airline_name,
+      airline_name
     );
     return statusHandler(res, 200, data);
   } catch (err) {

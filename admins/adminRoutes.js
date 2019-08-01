@@ -1,19 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const Admin = require("./adminController");
-const {authenticate} = require('../middleware/authentication')
-router.patch('/adminstatus/:userid', Admin.makeRemoveAdmin)// ok
-router.post('/:userid/details',Admin.addAdminDetails) // ok
-router.patch('/details',authenticate, Admin.editDetails) // ok
-router.get('/flights', Admin.getFlights)//ok
-router.get('/flights/:id', Admin.getFlight)//ok
-router.post('/flights', Admin.addFlight)//ok
-router.delete('/flights/:id',Admin.removeFlight)//ok
-router.get('/airports', Admin.getAirport)//ok
-router.post('/airports', Admin.addAirport)//ok
-router.delete('/airports/:id', Admin.removeAirport)//ok
-router.get('/users',authenticate, Admin.getAllAssignedUsers)//ok
-router.get('/trips',authenticate,Admin.getTrips)
-
+const {
+  idSchema,
+  postAdmin,
+  editAdmin,
+  postFlight,
+  postAirport
+} = require("../middleware/validation");
+router.patch("/adminstatus/:id", idSchema, Admin.makeRemoveAdmin);
+router.post("/details", postAdmin, Admin.addAdminDetails);
+router.put("/details", editAdmin, Admin.editDetails);
+router.get("/flights", Admin.getFlights);
+router.get("/flights/:id", idSchema, Admin.getFlight);
+router.post("/flights", postFlight, Admin.addFlight);
+router.delete("/flights/:id", idSchema, Admin.removeFlight);
+router.get("/airports", Admin.getAirport);
+router.post("/airports", postAirport, Admin.addAirport);
+router.delete("/airports/:id", idSchema, Admin.removeAirport);
+router.get("/users", Admin.getAllAssignedUsers);
+router.get("/trips", Admin.getTrips);
 
 module.exports = router;

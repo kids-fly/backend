@@ -25,7 +25,7 @@ return statusHandler(res , 500, "something went wrong")
 }
 const editUserProfile = async(req,res) => {
     const {username, firstname , lastname ,contact ,imageUrl} = req.body
-    const{id}= req.user
+    const{id}= req.user.id
 
 try{    
  const dbData = await User.getUsers(id)
@@ -45,7 +45,7 @@ try{
 
 }
 }
-module.exports={
-    getProfile,
-    editUserProfile
-}
+module.exports = {
+  getProfile,
+  editUserProfile
+};

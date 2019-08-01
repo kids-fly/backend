@@ -22,35 +22,11 @@ const validate = (value, scheme, res, next) => {
   const idSchema = (req , res , next) => {validate(req.params.id, schema.id, res, next); }
   const postTrip = (req , res , next) => {validate(req.body, schema.postTripSchema, res, next); }
   const editTrip = (req , res , next) => {validate(req.body, schema.editTripSchema, res, next); }
-//   static forgotPassword(req, res, next) { validate(req.body, schema.forgotpasswordSchema, res, next); }
+  const postAdmin = (req , res , next) => {validate(req.body, schema.adminDetailsSchema, res, next); }
+  const editAdmin = (req , res , next) => {validate(req.body, schema.editadminDetailsSchema, res, next); }
+  const postFlight = (req , res , next) => {validate(req.body, schema.postFlightSchema, res, next); }
+  const postAirport = (req , res , next) => {validate(req.body, schema.postAirportSchema, res, next); }
 
-//   static changePassword(req, res, next) { validate(req.body, schema.changePasswordSchema, res, next); }
-
-//   static resetPassword(req, res, next) { validate(req.body, schema.resetPasswordSchema, res, next); }
-
-//   static editProfile(req, res, next) { validate(req.body, schema.editProfileSchema, res, next); }
-
-//   static createParty(req, res, next) { validate(req.body, schema.createPartySchema, res, next); }
-
-//   static editParty(req, res, next) { validate(req.body, schema.editPartySchema, res, next); }
-
-//   static checkId(req, res, next) { validate(req.params.id, schema.id, res, next); }
-
-//   static createOffice(req, res, next) { validate(req.body, schema.createOfficeSchema, res, next); }
-
-//   static editOffice(req, res, next) { validate(req.body, schema.editOfficeSchema, res, next); }
-
-//   static createInterest(req, res, next) { validate(req.body, schema.createInterestSchema, res, next); }
-
-//   static editInterest(req, res, next) { validate(req.body, schema.editInterestSchema, res, next); }
-
-//   static createPetition(req, res, next) { validate(req.body, schema.createPetitionSchema, res, next); }
-
-//   static editPetition(req, res, next) { validate(req.body, schema.editPetitionSchema, res, next); }
-
-//   static createVote(req, res, next) { validate(req.body, schema.createVoteSchema, res, next); }
-
-//   static createCandidate(req, res, next) { validate(req.body, schema.createCandidateSchema, res, next); }
 
  module.exports = {
      auth,
@@ -58,4 +34,8 @@ const validate = (value, scheme, res, next) => {
      idSchema,
      postTrip,
      editTrip,
+     postAdmin,
+     editAdmin,
+     postFlight,
+     postAirport
  }
