@@ -36,20 +36,9 @@ const login = async (req, res) => {
     return statusHandler(res, 500, err.toString());
   }
 };
-const logout = async (req, res) => {
-  if (req.session) {
-    req.session.destroy(err => {
-      if (err) {
-        res.send("Error Logging out");
-      } else {
-        res.send(`Thanks for signing into kidsfly.\nHave a delightful flight.`);
-      }
-    });
-  }
-};
+
 
 module.exports = {
   register,
   login,
-  logout
 };

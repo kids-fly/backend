@@ -3,10 +3,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const router = require("./router");
 const server = express();
-const session = require("express-session");
-const KnexSessionStore = require("connect-session-knex")(session);
-const csurf = require('csurf')
-const store = new KnexSessionStore(/* options here */);
+// const session = require("express-session");
+// // const KnexSessionStore = require("connect-session-knex")(session);
+// const csurf = require('csurf')
+// const store = new KnexSessionStore(/* options here */);
 require("dotenv").config();
 const port = process.env.PORT || 2020;
 server.use(helmet());

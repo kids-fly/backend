@@ -6,7 +6,10 @@ const Users = require('../users/userModel')
 dotenv.config()
 const authenticate =async(req, res, next)=> {
   try{
-    const token = req.headers.authorization
+    const token = req.headers.Authorization
+    if(!token){
+      return statusHandler(res,401,"You need to login ")
+    }
       const decrypt = await jwt.verify(token, process.env.JWT_SECRET)
       const rows = await Users.getUsers(decrypt.subject)
     
@@ -20,7 +23,7 @@ const authenticate =async(req, res, next)=> {
       };
          return next(); 
   }catch(err){
-    return statusHandler(res, 500 , err.toString())
+    return statusHandler(res, 500 , "Something went wrong")
 
   }
 }

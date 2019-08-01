@@ -7,12 +7,9 @@
     "server": "nodemon index.js",
     "migrate": "NODE_ENV=production npx knex migrate:latest",
     "down": "NODE_ENV=production npx knex migrate:down",
-    "restart":"NODE_ENV=production heroku restart && heroku pg:reset DATABASE --confirm kids-fly",
+    "restart": "NODE_ENV=production heroku restart && heroku pg:reset DATABASE --confirm kids-fly",
     "start": "node index.js",
-    "test": "cross-env DB_ENV=testing jest --watch --verbose"
-  },
-  "jest": {
-    "testEnvironment": "node"
+    "test": "cross-env DB_ENV=testing mocha test --timeout 3000 --exit"
   },
   "repository": {
     "type": "git",
@@ -43,9 +40,10 @@
     "sqlite3": "^4.0.8"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cross-env": "^5.2.0",
-    "jest": "^24.8.0",
-    "nodemon": "^1.19.1",
-    "supertest": "^4.0.2"
+    "mocha": "^6.2.0",
+    "nodemon": "^1.19.1"
   }
 }

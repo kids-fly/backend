@@ -6,5 +6,6 @@ const Admin = require("../admins/adminController");
 router.get("/", User.getProfile);
 router.put("/", editProfile, User.editUserProfile);
 router.get("/flights/:id", idSchema, Admin.getFlight);
+router.get("/flights", Admin.getFlights);
 
 module.exports = router;
