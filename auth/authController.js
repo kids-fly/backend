@@ -26,10 +26,11 @@ const login = async (req, res) => {
       return statusHandler(res, 400, "Wrong Password");
     }
     const token = crypted.generateToken(checkInfo);
-    req.session.user = token;
+
     return statusHandler(res, 200, {
       status: "Login Succesful",
-      message: `Welcome ${checkInfo.username}`, 
+      message: `Welcome ${checkInfo.username}`,
+      token, 
     });
   } catch (err) {
     return statusHandler(res, 500, err.toString());

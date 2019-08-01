@@ -1,13 +1,13 @@
 
-const  dotenv = require('dotenv');
+const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const statusHandler = require('../helpers/statusHandler')
 const Users = require('../users/userModel')
 dotenv.config()
 const authenticate =async(req, res, next)=> {
   try{
-    if (req.session && req.session.user) {
-      const decrypt = await jwt.verify(req.session.user, process.env.JWT_SECRET)
+    const token = req.headers.authorization
+      const decrypt = await jwt.verify(token, process.env.JWT_SECRET)
       const rows = await Users.getUsers(decrypt.subject)
     
       if(!rows){
@@ -18,10 +18,7 @@ const authenticate =async(req, res, next)=> {
         username: decrypt.username,
         isAdmin:rows.isAdmin
       };
-         return next();
-      } 
-     
-      
+         return next(); 
   }catch(err){
     return statusHandler(res, 500 , err.toString())
 
