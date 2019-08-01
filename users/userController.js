@@ -25,7 +25,7 @@ return statusHandler(res , 500, "something went wrong")
 }
 const editUserProfile = async(req,res) => {
     const {username, firstname , lastname ,contact ,imageUrl} = req.body
-    const{id}= req.user.id
+    const id = req.user.id
 
 try{    
  const dbData = await User.getUsers(id)
