@@ -40,5 +40,6 @@ const getAllAdmins = async location => {
 module.exports = {
   getUsers,
   updateUser,
-  getAllAdmins
+  getAllAdmins,
+  
 };
