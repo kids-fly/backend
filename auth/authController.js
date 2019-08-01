@@ -29,8 +29,7 @@ const login = async (req, res) => {
     req.session.user = token;
     return statusHandler(res, 200, {
       status: "Login Succesful",
-      message: `Welcome ${checkInfo.username}`,
-      token: req.session.user
+      message: `Welcome ${checkInfo.username}`, 
     });
   } catch (err) {
     return statusHandler(res, 500, err.toString());

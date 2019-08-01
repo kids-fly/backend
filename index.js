@@ -10,7 +10,7 @@ const store = new KnexSessionStore(/* options here */);
 require("dotenv").config();
 const port = process.env.PORT || 2020;
 server.use(helmet());
-server.use(cors());
+server.use(cors({ credentials: true}));
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
 server.use(

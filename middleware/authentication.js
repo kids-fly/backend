@@ -6,12 +6,10 @@ const Users = require('../users/userModel')
 dotenv.config()
 const authenticate =async(req, res, next)=> {
   try{
-      const token= req.headers.Authorization ||req.params.token
-      const decrypt = await jwt.verify(token, process.env.JWT_SECRET)
+    if (req.session && req.session.user) {
+      const decrypt = await jwt.verify(req.session.user, process.env.JWT_SECRET)
       const rows = await Users.getUsers(decrypt.subject)
-      if(!token){
-        return res.status(401).json({ message: 'Not authorized' });
-      }
+    
       if(!rows){
         return statusHandler(res ,403,'Token not accessible')
       }
@@ -21,8 +19,8 @@ const authenticate =async(req, res, next)=> {
         isAdmin:rows.isAdmin
       };
          return next();
-  
-       
+      } 
+     
       
   }catch(err){
     return statusHandler(res, 500 , err.toString())
