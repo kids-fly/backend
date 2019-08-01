@@ -11,11 +11,7 @@ const getUserByUsername = async username => {
     .where("username", username)
     .first();
 };
-const getAllUsers = async() => {
-    return await db('users')
-}
 module.exports = {
   postUser,
   getUserByUsername,
-  getAllUsers
 };
