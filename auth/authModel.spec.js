@@ -1,15 +1,16 @@
 const db = require('../database/dbConfig');
 const Users = require('./authModel');
+const Auth = require('../users/userModel')
 
 beforeEach(async () => {
     await db('users').truncate();
   });
   describe('users.postUser',()=>{
     it('should add users to db', async () => {
-        let allUsers = await Users.getAllUsers()
+        let allUsers = await Auth.getUsers()
         expect(allUsers).toHaveLength(0)
         await Users.postUser({username:'basil', password:'12345'})
-        allUsers = await Users.getAllUsers()
+        allUsers = await Auth.getUsers()
         expect(allUsers).toHaveLength(1)
     })
 });

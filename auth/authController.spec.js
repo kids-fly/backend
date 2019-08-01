@@ -1,5 +1,4 @@
 const db = require('../database/dbConfig');
-const Users = require('./authModel');
 const request = require('supertest')
 const server = require('../index')
 

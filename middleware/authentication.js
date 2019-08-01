@@ -6,8 +6,9 @@ const Users = require('../users/userModel')
 dotenv.config()
 const authenticate =async(req, res, next)=> {
   try{
-    if (req.session && req.session.user) {
-      const decrypt = await jwt.verify(req.session.user, process.env.JWT_SECRET)
+    if (req.session && req.session.user && req.session.user === req.headers.token) {
+      token= req.headers.token ||req.params.token
+      const decrypt = await jwt.verify(token, process.env.JWT_SECRET)
       const rows = await Users.getUsers(decrypt.subject)
     
       if(!rows){
