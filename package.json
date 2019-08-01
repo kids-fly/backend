@@ -9,6 +9,7 @@
     "down": "NODE_ENV=production npx knex migrate:down",
     "up": "NODE_ENV=production npx knex migrate:up",
     "test": "cross-env DB_ENV=testing jest --watch --verbose",
+    "delete":"NODE_ENV=production DROP DATABASE KidsFly",
     "start": "node index.js"
   },
   "jest": {
