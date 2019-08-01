@@ -32,7 +32,7 @@ const login = async (req, res) => {
       message: `Welcome ${checkInfo.username}`
     });
   } catch (err) {
-    return statusHandler(res, 500, "Login Failed");
+    return statusHandler(res, 500, err.toString());
   }
 };
 const logout = async (req, res) => {
