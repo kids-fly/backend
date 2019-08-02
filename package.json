@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon index.js",
     "migrate": "NODE_ENV=production npx knex migrate:latest",
-    "seed": "npm run knex seed:run",
+    "seed": "npx knex seed:run",
     "down": "NODE_ENV=production npx knex migrate:down",
     "restart": "NODE_ENV=production heroku restart && heroku pg:reset DATABASE --confirm kids-fly",
     "start": "node index.js",
