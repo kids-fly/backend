@@ -1,7 +1,7 @@
 const db = require("../database/dbConfig");
 
 const postUser = async data => {
-  const [id] = await db("users").insert(data);
+  const id = await db("users").insert(data)
   return await db("users")
     .where("id", id)
     .first();

@@ -3,7 +3,7 @@ const Admin = require('../admins/adminModel')
 const statusHandler = require('../helpers/statusHandler')
 
 const getProfile = async(req, res) => {
-    const {id} = req.user
+    const id = req.user
 try{
     const data = await User.getUsers(id)
     if(!data.id) {
@@ -36,7 +36,7 @@ try{
      lastname:lastname || dbData.lastname,
      contact:contact || dbData.contact ,
      imageUrl:imageUrl || dbData.imageUrl,
-     isAdmin:dbData.isAdmin,
+     isAdmin:true,
  })
  return statusHandler(res ,200 ,data)
 

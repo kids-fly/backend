@@ -9,7 +9,7 @@ beforeEach(async () => {
     await db('airports').truncate()
   });
   describe('users.getUser',()=>{
-    it('should be able to get db', async () => {
+    it('should be able to get db', async() => {
         await Auth.postUser({username:'basil', password:'12345'})
         allUsers = await User.getUsers(1)
         expect(allUsers).to.deep.equal({

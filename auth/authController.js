@@ -12,7 +12,7 @@ const register = async (req, res) => {
     await User.postUser({ username, password: hashedPassword });
     return statusHandler(res, 201, "User Registration Successful");
   } catch (err) {
-    return statusHandler(res, 500, "Registration Failed");
+    return statusHandler(res, 500, err.toString());
   }
 };
 const login = async (req, res) => {

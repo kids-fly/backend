@@ -6,7 +6,7 @@ const Users = require('../users/userModel')
 dotenv.config()
 const authenticate =async(req, res, next)=> {
   try{
-    const token = req.headers.Authorization
+    const token = req.headers.authorization
     if(!token){
       return statusHandler(res,401,"You need to login ")
     }

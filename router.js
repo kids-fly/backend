@@ -7,7 +7,7 @@ const tripRoute = require("./trips/tripRoutes");
 const {authenticate, isAdmin} = require('./middleware/authentication')
 
 router.use("/auth", authRoute);
-router.use("/user", userRoute);
+router.use("/user",authenticate,userRoute);
 router.use("/admin",authenticate,isAdmin, adminRoute);
 router.use("/user/trips",authenticate, tripRoute);
 
