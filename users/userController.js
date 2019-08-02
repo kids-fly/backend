@@ -36,7 +36,7 @@ try{
      lastname:lastname || dbData.lastname,
      contact:contact || dbData.contact ,
      imageUrl:imageUrl || dbData.imageUrl,
-     isAdmin:true,
+     isAdmin:dbData.isAdmin,
  })
  return statusHandler(res ,200 ,data)
 
