@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const User = require("./userController");
-const {authenticate} = require('../middleware/authentication')
-router.get('/:id' ,authenticate, User.getProfile)
-router.put('/:id',authenticate, User.editUserProfile)
+const { editProfile ,idSchema} = require("../middleware/validation");
+const Admin = require("../admins/adminController");
+router.get("/", User.getProfile);
+router.put("/", editProfile, User.editUserProfile);
+router.get("/flights/:id", idSchema, Admin.getFlight);
+router.get("/flights", Admin.getFlights);
 
 module.exports = router;

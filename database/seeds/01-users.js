@@ -7,12 +7,12 @@ exports.seed = function(knex, Promise) {
       return knex("users").insert([
         {
           id: 1,
-          username: "cea",
-          password: "b12345",
-          firstname: "basil",
-          lastname: "ogbonna",
-          contact: "1234517",
-          isAdmin: false
+          username: "basil",
+          password:"$2a$12$JGQMBreNeGG7XnEIrzKRku1cWoDPa8jSquKYgPxTSNd84lxc9BiPy",
+          firstname: "nicholas",
+          lastname: "patterson",
+          contact: "552153",
+          isAdmin: true
         },
         {
           id: 2,

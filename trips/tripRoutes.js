@@ -1,13 +1,12 @@
-const express = require('express')
-const router = express.Router()
-const Trips = require('./tripController')
+const express = require("express");
+const router = express.Router();
+const Trips = require("./tripController");
+const { idSchema, postTrip, editTrip } = require("../middleware/validation");
 
-// router.get('/', Trips.getTrips)
-// router.post('/', Trips.scheduleTrip)
-// router.put('/:id', Trips.editTrip)
-// router.get('/:id', Trips.getTrip)
-// router.delete('/:id', Trips.deleteTrip)
-// router.patch(':/id', Trips.addAdminToTrip) randomly search two admin based on your flights admin
+router.get("/", Trips.getTrips); // ok
+router.post("/", postTrip, Trips.scheduleTrip); //ok
+router.get("/:id", idSchema, Trips.getTrip); //ok
+router.delete("/:id", idSchema, Trips.deleteTrip); //ok
+router.put("/:id", idSchema, editTrip, Trips.editTrip);
 
-
-module.exports = router
+module.exports = router;

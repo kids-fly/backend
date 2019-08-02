@@ -3,14 +3,14 @@ const Admin = require('../admins/adminModel')
 const statusHandler = require('../helpers/statusHandler')
 
 const getProfile = async(req, res) => {
-    const {id} = req.params
+    const id = req.user
 try{
     const data = await User.getUsers(id)
-    if(!data) {
+    if(!data.id) {
     return statusHandler(res ,404 , "User does not exist")
     }
     if(data.isAdmin){
-        const adminData = await Admin.getAdminsDetials(data.id)
+        const adminData = await Admin.getAdminsDetials(data.id ,'')
         const returnedData = {
             ...data,
             airport:adminData.airport_name,
@@ -20,12 +20,12 @@ try{
     }
     return statusHandler(res, 200, data)
 }catch(err){
-return statusHandler(res , 500, 'Something Went Wrong')
+return statusHandler(res , 500, "something went wrong")
 }
 }
 const editUserProfile = async(req,res) => {
     const {username, firstname , lastname ,contact ,imageUrl} = req.body
-    const{id}= req.params
+    const id = req.user.id
 
 try{    
  const dbData = await User.getUsers(id)
@@ -45,7 +45,7 @@ try{
 
 }
 }
-module.exports={
-    getProfile,
-    editUserProfile
-}
+module.exports = {
+  getProfile,
+  editUserProfile
+};

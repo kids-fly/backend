@@ -1,3 +1,4 @@
+
 exports.up = function(knex) {
     return knex.schema
       .createTable("users", table => {
@@ -97,8 +98,9 @@ exports.up = function(knex) {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.integer("no_of_kids").unsigned();
-        table.boolean("isArriving");
-        table.boolean("isArrived");
+        table.enu('no_of_assigned_admins',[1 ,2]);
+        table.enu('admin_on',['departure','arrival','both'])
+        table.boolean("trip_completed");
       })
       .createTable("arrivals", table => {
         table.increments();
@@ -111,6 +113,17 @@ exports.up = function(knex) {
           .onUpdate("CASCADE")
           .onDelete("CASCADE");
         table.text("user_location");
+        table.boolean('isArriving');
+        table
+        .integer("airport_id")
+        .unsigned()
+        .notNullable()
+        .references("id")
+        .inTable("airports")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+        // table.enu('hasArrived', ['departure_airport', 'arrival_airport'])
+  
       });
   };
   

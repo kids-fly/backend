@@ -1,11 +1,10 @@
 const User = require("./authModel");
 const crypted = require("../middleware/encryption");
-const statusHandler = require('../helpers/statusHandler')
-;
+const statusHandler = require("../helpers/statusHandler");
 const register = async (req, res) => {
   const { username, password } = req.body;
   try {
-      const checkInfo = await User.getUserByUsername(username)
+    const checkInfo = await User.getUserByUsername(username);
     if (!!checkInfo) {
       return statusHandler(res, 400, "Username already exists");
     }
@@ -13,7 +12,7 @@ const register = async (req, res) => {
     await User.postUser({ username, password: hashedPassword });
     return statusHandler(res, 201, "User Registration Successful");
   } catch (err) {
-    return statusHandler(res, 500, "Registration Failed");
+    return statusHandler(res, 500, err.toString());
   }
 };
 const login = async (req, res) => {
@@ -27,24 +26,19 @@ const login = async (req, res) => {
       return statusHandler(res, 400, "Wrong Password");
     }
     const token = crypted.generateToken(checkInfo);
-    req.session.user = token
-    return statusHandler(res, 200, {status:'Login Succesful',message:`Welcome ${checkInfo.username}`});
+
+    return statusHandler(res, 200, {
+      status: "Login Succesful",
+      message: `Welcome ${checkInfo.username}`,
+      token, 
+    });
   } catch (err) {
-    return statusHandler(res, 500,'Login Failed');
+    return statusHandler(res, 500, err.toString());
   }
 };
-const logout = async(req ,res) =>{
-    if (req.session) {
-        req.session.destroy(err => {
-          if (err) {
-            res.send('Error Logging out');
-          } else {
-            res.send(`Thanks for signing into kidsfly.\nHave a delightful flight.`);
-          }
-        });
-      }
-    }
 
-module.exports={
-    register,login,logout
-}
+
+module.exports = {
+  register,
+  login,
+};
