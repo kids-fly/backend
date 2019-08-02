@@ -11,7 +11,7 @@ exports.seed = function(knex, Promise) {
           password:"$2a$12$JGQMBreNeGG7XnEIrzKRku1cWoDPa8jSquKYgPxTSNd84lxc9BiPy",
           firstname: "nicholas",
           lastname: "patterson",
-          contact: "55213",
+          contact: "552153",
           isAdmin: true
         },
         {
