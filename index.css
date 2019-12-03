@@ -1,5 +1,7 @@
 body{
     display:flex;
-    background:url('./assests/banner.jpg')
+    background:url('./assests/banner.jpg');
+    height:100%;
+    width:100%;
 
 }

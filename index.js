@@ -41,10 +41,6 @@ server.get('/', (req, res) => {
   res.sendFile('index.html', {
     root: path_join(__dirname, './')
   })
-  res.status(200).json({
-    status: 200,
-    data: ['This is the default route'],
-  });
 });
 server.use("/", router);
 
