@@ -1,7 +1,20 @@
-body{
+.body{
     display:flex;
     background:url('./assests/banner.jpg');
     height:100%;
     width:100%;
+    align-items:center
+    
 
+}
+.logo{
+    width:50%;
+}
+.link{
+    text-decoration:none;
+    color:blue;
+    font-size:1.2rem;
+}
+h2{
+    font-size: 1.2rem;
 }
