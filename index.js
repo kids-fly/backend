@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const router = require("./router");
+const path = require('path')
 const server = express();
 // const session = require("express-session");
 // // const KnexSessionStore = require("connect-session-knex")(session);
@@ -37,6 +38,9 @@ server.use(express.json());
 // })
 
 server.get('/', (req, res) => {
+  res.sendFile('index.html', {
+    root: path_join(__dirname, './')
+  })
   res.status(200).json({
     status: 200,
     data: ['This is the default route'],
