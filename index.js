@@ -39,7 +39,7 @@ server.use(express.json());
 
 server.get('/', (req, res) => {
   res.sendFile('index.html', {
-    root: path_join(__dirname, './')
+    root: path.join(__dirname, './')
   })
 });
 server.use("/", router);
