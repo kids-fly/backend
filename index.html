@@ -10,23 +10,33 @@
     <style>
         .body {
             display: flex;
-            background: url('./banner.jpg');
-            background-repeat:no-repeat;
-            background-size:cover;
-            background-position: center;
             height: 100vh;
-            width: 100vh;
+            width: 100%;
+            margin:0;
+            padding:0;
             flex-direction:column;
             align-items: center;
+            justify-content:center;
         }
 
         .logo {
-            width: 100%;
+            display:flex;
+            align-items:flex-end;
+            width: 60%;
+            margin:0 20%;
             background: url('./kidsfly.png');
             background-repeat:no-repeat;
-            background-size:contain;
-            height:30%;
+            background-position: center;
+            background-size:cover;
+            height:17%;
+           
         }
+        .mission {
+                color:teal;
+                font-family:fantasy;
+                text-align:center;
+                width:100%;
+            }
 
         .link {
             text-decoration: none;
@@ -40,11 +50,17 @@
         h2 {
             font-size: 1.5rem;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            text-align:center;
         }
         .details{
             display:flex;
+            background: url('./banner.svg');
+            background-repeat:no-repeat;
+            background-size:90vw 70vh;
+            background-position: center;
             width:100%;
             justify-content:center;
+            align-items:flex-end;
             height:70%;
         }
     </style>
@@ -52,7 +68,9 @@
 
 <body class='body'>
     <div class='logo'>
+        
     </div>
+    <p class='mission'>...hassle-free flight for parents with kids</p>
     <div class='details'> 
         <h2>To use this API, view the <a class='link' href='https://github.com/kids-fly/backend'>ReadME</a></h2>
     </div>
