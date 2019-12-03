@@ -14,7 +14,7 @@ server.use(helmet());
 server.use(cors());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.json());
-app.use(express.static(__dirname + '/assests'));
+server.use(express.static(__dirname + '/assests'));
 // server.use(
 //   session({
 //     name: "KidsFly", // default is connect.sid

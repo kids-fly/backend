@@ -10,36 +10,42 @@
     <style>
         .body {
             display: flex;
-            background: url('./assests/banner.jpg');
-            height: 100%;
+            background: url('./banner.jpg');
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-position: center;
+            height: 100vh;
             width: 100vh;
             flex-direction:column;
             align-items: center;
         }
 
         .logo {
-            width: 50%;
-            background: url('./assests/kidsfly.png');
-            height:40%;
+            width: 100%;
+            background: url('./kidsfly.png');
+            background-repeat:no-repeat;
+            background-size:contain;
+            height:30%;
         }
 
         .link {
             text-decoration: none;
             color: teal;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
         }
-
+        .link:hover{
+            color: black;
+        }
         h2 {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         }
         .details{
             display:flex;
             width:100%;
             justify-content:center;
-            align-items:center;
-            height:60%;
+            height:70%;
         }
     </style>
 </head>
